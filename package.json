@@ -20,13 +20,13 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@stencil/core": "^0.9.1",
+        "@stencil/core": "^0.9.5",
         "@stencil/dev-server": "latest",
         "@stencil/sass": "0.0.5",
         "@stencil/utils": "latest",
-        "@types/jest": "^21.1.1",
+        "@types/jest": "^22.2.3",
         "@types/pdfjs-dist": "^0.1.2",
-        "jest": "^21.2.1",
+        "jest": "^22.4.3",
         "pdfjs-dist": "^2.0.489"
     },
     "repository": {
