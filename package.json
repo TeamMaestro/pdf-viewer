@@ -1,6 +1,6 @@
 {
     "name": "@teammaestro/stencil-pdf-viewer",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Stencil PDF Viewer",
     "module": "dist/esm/index.js",
     "main": "dist/index.js",
