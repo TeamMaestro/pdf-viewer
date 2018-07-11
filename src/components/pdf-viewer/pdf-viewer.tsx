@@ -58,6 +58,25 @@ export class PdfViewerComponent {
                             <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
                         </svg>
                     </button>
+                    <button class="toolbar-btn" title="Fit Page"
+                        onClick={() => this.toggleFitToPage()}
+                        hidden={!this.fitToPage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
+                            <path d="M20 9.657V4h-5.657L20 9.657zM4 14.343V20h5.657L4 14.343z"></path>
+                            <path d="M15.758 9.657l-1.414-1.414 2.121-2.121 1.414 1.414zm-8.223 8.221l-1.414-1.414 2.121-2.121 1.414 1.414z" opacity=".75"></path>
+                            <path d="M12.222 10.364l1.06-1.06 1.415 1.413-1.06 1.061zm-2.918 2.919l1.06-1.06 1.415 1.414-1.061 1.06z" opacity=".33"></path>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" title="Fit Width"
+                        onClick={() => this.toggleFitToPage()}
+                        hidden={this.fitToPage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
+                            <path d="M19 16l4-4-4-4v8zM5 8l-4 4 4 4V8z"></path><path d="M19 13h-3v-2h3zM8 13H5v-2h3z" opacity=".75"></path>
+                            <path d="M13 11h1.5v2H13zm-3.5 0H11v2H9.5z" opacity=".33"></path>
+                        </svg>
+                    </button>
                     {/* <div>
                         <input
                             onKeyDown={(event) => this.handleSearchNext(event)}
@@ -166,7 +185,7 @@ export class PdfViewerComponent {
     @Prop() stickToPage: boolean = false;
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
-    @Prop() fitToPage: boolean = false;
+    @Prop({mutable: true}) fitToPage: boolean = true;
 
     componentDidLoad() {
         this._initListeners();
@@ -210,20 +229,28 @@ export class PdfViewerComponent {
         }
     }
 
+    public toggleFitToPage() {
+        this.fitToPage = !this.fitToPage;
+        this.zoom = 1;
+        this.updateSize();
+    }
+
     public zoomOut() {
+        this.fitToPage = true;
         this.zoom *= 0.75;
         if (this.zoom < this.minZoom) {
             this.zoom = this.minZoom;
         }
-        this.pdfViewer._setScale(this.zoom, this.stickToPage);
+        this.updateSize();
     }
 
     public zoomIn() {
+        this.fitToPage = true;
         this.zoom *= 1.25;
         if (this.zoom > this.maxZoom) {
             this.zoom = this.maxZoom;
         }
-        this.pdfViewer._setScale(this.zoom, this.stickToPage);
+        this.updateSize();
     }
 
     public updateSize() {
@@ -234,7 +261,11 @@ export class PdfViewerComponent {
 
             // Scale the document when it shouldn't be in original size or doesn't fit into the viewport
             if (!this.originalSize || (this.fitToPage && viewport.width > this.element.offsetWidth)) {
-                scale = this.getScale(page.getViewport(1).width);
+                if (this.fitToPage) {
+                    scale = this.getScaleWidth(page.getViewport(1).width);
+                } else {
+                    scale = this.getScaleHeight(page.getViewport(1).height);
+                }
                 stickToPage = !this.stickToPage;
             }
 
@@ -343,7 +374,7 @@ export class PdfViewerComponent {
         }
     }
 
-    private getScale(viewportWidth: number) {
+    private getScaleWidth(viewportWidth: number) {
         const offsetWidth = this.element.offsetWidth - 40;
 
         if (offsetWidth === 0) {
@@ -351,6 +382,16 @@ export class PdfViewerComponent {
         }
 
         return this.zoom * (offsetWidth / viewportWidth) / PdfViewerComponent.CSS_UNITS;
+    }
+
+    private getScaleHeight(viewportHeight: number) {
+        const offsetHeight = this.element.offsetHeight - 40;
+
+        if (offsetHeight === 0) {
+            return 1;
+        }
+
+        return this.zoom * (offsetHeight / viewportHeight) / PdfViewerComponent.CSS_UNITS;
     }
 
 }
