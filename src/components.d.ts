@@ -34,6 +34,8 @@ declare global {
       'canAutoResize': boolean;
       'externalLinkTarget': string;
       'fitToPage': boolean;
+      'maxZoom': number;
+      'minZoom': number;
       'originalSize': boolean;
       'page': number;
       'renderText': boolean;
@@ -66,6 +68,8 @@ declare global {
       'canAutoResize'?: boolean;
       'externalLinkTarget'?: string;
       'fitToPage'?: boolean;
+      'maxZoom'?: number;
+      'minZoom'?: number;
       'onAfterLoadComplete'?: (event: CustomEvent) => void;
       'onOnError'?: (event: CustomEvent) => void;
       'onOnProgress'?: (event: CustomEvent) => void;

@@ -37,6 +37,25 @@
     background: #3d464d;
     box-shadow: 0 2px 5px rgba(black, .1);
     color: white;
+    &-btn {
+        -ms-touch-action: none;
+        touch-action: none;
+        color: #fff;
+        cursor: pointer;
+        height: 48px;
+        width: auto;
+        min-width: 48px;
+        padding: 0 11px;
+        margin: 0;
+        border: 1px solid transparent;
+        background-color: transparent;
+        outline: none;
+        -webkit-transition: background-color .15s;
+        transition: background-color .15s;
+        svg {
+            fill: #fff;
+        }
+    }
 }
 
 .textLayer {

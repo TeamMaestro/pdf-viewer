@@ -42,6 +42,22 @@ export class PdfViewerComponent {
                         <span> of </span>
                         <span>{this.totalPages}</span>
                     </div>
+                    <button class="toolbar-btn" title="Zoom Out"
+                        onClick={() => this.zoomOut()}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M4.5 8h9v2h-9z" opacity=".5"></path>
+                            <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
+                            <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" title="Zoom In"
+                        onClick={() => this.zoomIn()}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path opacity=".5" d="M13.5 8H10V4.5H8V8H4.5v2H8v3.5h2V10h3.5V8z"></path>
+                            <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
+                            <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
+                        </svg>
+                    </button>
                     {/* <div>
                         <input
                             onKeyDown={(event) => this.handleSearchNext(event)}
@@ -139,7 +155,9 @@ export class PdfViewerComponent {
         this.pdfViewer.currentPageNumber = this.currentPage;
     }
 
-    @Prop() zoom: number = 1;
+    @Prop({mutable: true}) zoom: number = 1;
+    @Prop() minZoom: number = 0.25;
+    @Prop() maxZoom: number = 4;
 
     @Prop() rotation: number = 0;
 
@@ -190,6 +208,22 @@ export class PdfViewerComponent {
             this.currentPage--;
             this.pdfViewer.currentPageNumber = this.currentPage;
         }
+    }
+
+    public zoomOut() {
+        this.zoom *= 0.75;
+        if (this.zoom < this.minZoom) {
+            this.zoom = this.minZoom;
+        }
+        this.pdfViewer._setScale(this.zoom, this.stickToPage);
+    }
+
+    public zoomIn() {
+        this.zoom *= 1.25;
+        if (this.zoom > this.maxZoom) {
+            this.zoom = this.maxZoom;
+        }
+        this.pdfViewer._setScale(this.zoom, this.stickToPage);
     }
 
     public updateSize() {
