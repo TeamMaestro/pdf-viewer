@@ -20,8 +20,12 @@ export class PdfViewerComponent {
         return (
             <div id="mainContainer">
                 <div class="toolbar">
-                    <div>
+                    <div class="page-section">
                         <span>Page </span>
+                        <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
+                            onClick={() => this.prevPage()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 12.5l9 9v-18z"></path></svg>
+                        </button>
                         <input
                             type="number"
                             min="1"
@@ -29,15 +33,21 @@ export class PdfViewerComponent {
                             value={this.currentPage}
                             onChange={(event) => this.handlePageInput(event)}>
                         </input>
+                        <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
+                            onClick={() => this.nextPage()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.5 12.5l-9 9v-18z"></path>
+                            </svg>
+                        </button>
                         <span> of </span>
                         <span>{this.totalPages}</span>
                     </div>
-                    <div>
+                    {/* <div>
                         <input
                             onKeyDown={(event) => this.handleSearchNext(event)}
                             onInput={(event) => this.handleSearch(event)}>
                         </input>
-                    </div>
+                    </div> */}
                 </div>
                 <div id="viewerContainer">
                     <div class="pdf-viewer"></div>
@@ -166,6 +176,20 @@ export class PdfViewerComponent {
         this.pdfLinkService.setViewer(this.pdfViewer);
         this.pdfFindController = new PDFJSViewer.PDFFindController({ pdfViewer: this.pdfViewer });
         this.pdfViewer.setFindController(this.pdfFindController);
+    }
+
+    public nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.pdfViewer.currentPageNumber = this.currentPage;
+        }
+    }
+
+    public prevPage() {
+        if (this.currentPage > 0) {
+            this.currentPage--;
+            this.pdfViewer.currentPageNumber = this.currentPage;
+        }
     }
 
     public updateSize() {
