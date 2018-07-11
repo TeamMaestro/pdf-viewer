@@ -32,14 +32,19 @@ declare global {
   namespace StencilComponents {
     interface StPdfViewer {
       'canAutoResize': boolean;
+      'currentMatchIndex': number;
       'externalLinkTarget': string;
       'fitToPage': boolean;
+      'maxZoom': number;
+      'minZoom': number;
       'originalSize': boolean;
       'page': number;
       'renderText': boolean;
       'rotation': number;
+      'searchOpen': boolean;
       'src': string | Uint8Array | PDFSource;
       'stickToPage': boolean;
+      'totalMatchCount': number;
       'zoom': number;
     }
   }
@@ -64,8 +69,11 @@ declare global {
   namespace JSXElements {
     export interface StPdfViewerAttributes extends HTMLAttributes {
       'canAutoResize'?: boolean;
+      'currentMatchIndex'?: number;
       'externalLinkTarget'?: string;
       'fitToPage'?: boolean;
+      'maxZoom'?: number;
+      'minZoom'?: number;
       'onAfterLoadComplete'?: (event: CustomEvent) => void;
       'onOnError'?: (event: CustomEvent) => void;
       'onOnProgress'?: (event: CustomEvent) => void;
@@ -74,8 +82,10 @@ declare global {
       'page'?: number;
       'renderText'?: boolean;
       'rotation'?: number;
+      'searchOpen'?: boolean;
       'src'?: string | Uint8Array | PDFSource;
       'stickToPage'?: boolean;
+      'totalMatchCount'?: number;
       'zoom'?: number;
     }
   }
