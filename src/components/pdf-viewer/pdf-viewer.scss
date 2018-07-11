@@ -33,11 +33,16 @@
     height: 48px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-shrink: 0;
     width: 100%;
     background: #3d464d;
     box-shadow: 0 2px 5px rgba(black, .1);
     color: white;
+    &-left, &-right {
+        display: flex;
+        align-items: center;
+    }
     &-btn {
         -ms-touch-action: none;
         touch-action: none;
@@ -53,8 +58,18 @@
         outline: none;
         -webkit-transition: background-color .15s;
         transition: background-color .15s;
+        border-left: 1px solid #48535b;
+        &:last-child {
+            border-right: 1px solid #48535b;
+        }
         svg {
             fill: #fff;
+        }
+        &:disabled {
+            cursor: not-allowed;
+            svg {
+                fill: #83888d;
+            }
         }
     }
 }
@@ -332,3 +347,124 @@
         }
     }
 }
+
+.search {
+    &-container {
+        &[hidden] {
+            display: none;
+        }
+        position: absolute;
+        top: 48px;
+        height: 48px;
+        right: 0;
+        padding: 5px 10px;
+        width: 400px;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background-color: #2d3133;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        opacity: 1;
+        -webkit-transition: opacity .4s ease 0s;
+        transition: opacity .4s ease 0s;
+        z-index: 10;
+        input {
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            padding: 5px 10px;
+            padding-right: 0;
+            width: 0;
+            font-size: 13px;
+            background: #fff;
+            color: #83888d;
+            line-height: 20px;
+            border: none;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            &:focus {
+                outline: 0;
+            }
+        }
+    }
+    &-form {
+        -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        margin-right: 10px;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+        align-items: stretch;
+        height: 30px;
+        &-result {
+            line-height: 20px;
+            padding: 5px 10px;
+            text-align: right;
+            background: #fff;
+            color: #83888d;
+            font-size: 13px;
+            min-width: 40px;
+        }
+    }
+
+    &-close-btn {
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        line-height: 20px;
+        -ms-touch-action: none;
+        touch-action: none;
+        color: #fff;
+        background: #3d464d;
+        text-align: center;
+        font-size: 13px;
+        -webkit-transition: all .15s;
+        transition: all .15s;
+    }
+}
+ .search-control {
+     height: 30px;
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+     -webkit-box-orient: vertical;
+     -webkit-box-direction: normal;
+     -ms-flex-direction: column;
+     flex-direction: column;
+     margin-left: 1px;
+     &-btn {
+         width: 20px;
+         background: #3d464d;
+         color: #fff;
+         border: 0;
+         cursor: pointer;
+         -webkit-transition: all .15s;
+         transition: all .15s;
+         padding: 0;
+         -ms-touch-action: none;
+         touch-action: none;
+         &:focus {
+            outline: 0;
+         }
+         svg {
+             fill: #83888d;
+         }
+     }
+ }

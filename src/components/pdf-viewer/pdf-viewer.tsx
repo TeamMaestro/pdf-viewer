@@ -20,69 +20,110 @@ export class PdfViewerComponent {
         return (
             <div id="mainContainer">
                 <div class="toolbar">
-                    <div class="page-section">
-                        <span>Page </span>
-                        <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
-                            onClick={() => this.prevPage()}>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 12.5l9 9v-18z"></path></svg>
-                        </button>
-                        <input
-                            type="number"
-                            min="1"
-                            max={this.totalPages}
-                            value={this.currentPage}
-                            onChange={(event) => this.handlePageInput(event)}>
-                        </input>
-                        <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
-                            onClick={() => this.nextPage()}>
+                    <div class="toolbar-left">
+                        <div class="page-section">
+                            <span>Page </span>
+                            <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
+                                onClick={() => this.prevPage()}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 12.5l9 9v-18z"></path></svg>
+                            </button>
+                            <input
+                                type="number"
+                                min="1"
+                                max={this.totalPages}
+                                value={this.currentPage}
+                                onChange={(event) => this.handlePageInput(event)}>
+                            </input>
+                            <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
+                                onClick={() => this.nextPage()}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M16.5 12.5l-9 9v-18z"></path>
+                                </svg>
+                            </button>
+                            <span> of </span>
+                            <span>{this.totalPages}</span>
+                        </div>
+                        <button class="toolbar-btn" title="Zoom Out"
+                            disabled={this.zoom <= this.minZoom}
+                            onClick={() => this.zoomOut()}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M16.5 12.5l-9 9v-18z"></path>
+                                <path d="M4.5 8h9v2h-9z" opacity=".5"></path>
+                                <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
+                                <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
                             </svg>
                         </button>
-                        <span> of </span>
-                        <span>{this.totalPages}</span>
+                        <button class="toolbar-btn" title="Zoom In"
+                            disabled={this.zoom >= this.maxZoom}
+                            onClick={() => this.zoomIn()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path opacity=".5" d="M13.5 8H10V4.5H8V8H4.5v2H8v3.5h2V10h3.5V8z"></path>
+                                <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
+                                <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
+                            </svg>
+                        </button>
+                        <button class="toolbar-btn" title="Fit Page"
+                            onClick={() => this.toggleFitToPage()}
+                            hidden={!this.fitToPage}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
+                                <path d="M20 9.657V4h-5.657L20 9.657zM4 14.343V20h5.657L4 14.343z"></path>
+                                <path d="M15.758 9.657l-1.414-1.414 2.121-2.121 1.414 1.414zm-8.223 8.221l-1.414-1.414 2.121-2.121 1.414 1.414z" opacity=".75"></path>
+                                <path d="M12.222 10.364l1.06-1.06 1.415 1.413-1.06 1.061zm-2.918 2.919l1.06-1.06 1.415 1.414-1.061 1.06z" opacity=".33"></path>
+                            </svg>
+                        </button>
+                        <button class="toolbar-btn" title="Fit Width"
+                            onClick={() => this.toggleFitToPage()}
+                            hidden={this.fitToPage}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
+                                <path d="M19 16l4-4-4-4v8zM5 8l-4 4 4 4V8z"></path><path d="M19 13h-3v-2h3zM8 13H5v-2h3z" opacity=".75"></path>
+                                <path d="M13 11h1.5v2H13zm-3.5 0H11v2H9.5z" opacity=".33"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <button class="toolbar-btn" title="Zoom Out"
-                        onClick={() => this.zoomOut()}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M4.5 8h9v2h-9z" opacity=".5"></path>
-                            <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
-                            <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
-                        </svg>
-                    </button>
-                    <button class="toolbar-btn" title="Zoom In"
-                        onClick={() => this.zoomIn()}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path opacity=".5" d="M13.5 8H10V4.5H8V8H4.5v2H8v3.5h2V10h3.5V8z"></path>
-                            <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
-                            <path d="M20.556 23.03l-5.793-5.793 2.475-2.475 5.793 5.793a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.415.001z" opacity=".66"></path>
-                        </svg>
-                    </button>
-                    <button class="toolbar-btn" title="Fit Page"
-                        onClick={() => this.toggleFitToPage()}
-                        hidden={!this.fitToPage}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
-                            <path d="M20 9.657V4h-5.657L20 9.657zM4 14.343V20h5.657L4 14.343z"></path>
-                            <path d="M15.758 9.657l-1.414-1.414 2.121-2.121 1.414 1.414zm-8.223 8.221l-1.414-1.414 2.121-2.121 1.414 1.414z" opacity=".75"></path>
-                            <path d="M12.222 10.364l1.06-1.06 1.415 1.413-1.06 1.061zm-2.918 2.919l1.06-1.06 1.415 1.414-1.061 1.06z" opacity=".33"></path>
-                        </svg>
-                    </button>
-                    <button class="toolbar-btn" title="Fit Width"
-                        onClick={() => this.toggleFitToPage()}
-                        hidden={this.fitToPage}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M20.25 2A1.75 1.75 0 0 1 22 3.75v16.5A1.75 1.75 0 0 1 20.25 22H3.75A1.75 1.75 0 0 1 2 20.25V3.75A1.75 1.75 0 0 1 3.75 2h16.5m0-2H3.75A3.754 3.754 0 0 0 0 3.75v16.5A3.754 3.754 0 0 0 3.75 24h16.5A3.754 3.754 0 0 0 24 20.25V3.75A3.754 3.754 0 0 0 20.25 0z" opacity=".33"></path>
-                            <path d="M19 16l4-4-4-4v8zM5 8l-4 4 4 4V8z"></path><path d="M19 13h-3v-2h3zM8 13H5v-2h3z" opacity=".75"></path>
-                            <path d="M13 11h1.5v2H13zm-3.5 0H11v2H9.5z" opacity=".33"></path>
-                        </svg>
-                    </button>
-                    {/* <div>
-                        <input
-                            onKeyDown={(event) => this.handleSearchNext(event)}
-                            onInput={(event) => this.handleSearch(event)}>
-                        </input>
-                    </div> */}
+                    <div class="toolbar-right">
+                        <button class="toolbar-btn" title="Search Document"
+                            onClick={() => this.toggleSearch()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M21.48 18.95l-4.15-4.15-2.53 2.53 4.15 4.15a1.08 1.08 0 0 0 1.52 0l1-1a1.08 1.08 0 0 0 .01-1.53z" opacity=".75"></path>
+                                <circle cx="9.5" cy="9.5" r="6.5" fill="none" stroke-miterlimit="10" stroke-width="2" stroke="currentColor"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-container" hidden={!this.searchOpen}>
+                    <div class="search-form">
+                        <input type="text" name="search" autocomplete="off"
+                            onInput={(event) => this.handleSearch(event)}
+                            onKeyUp={(event) => this.handleSearchNext(event)}
+                            placeholder="Search Document"
+                            value={this.searchQuery} />
+                        <div class="search-form-result" hidden={this.searchQuery.trim().length < 1}>
+                            <div>
+                                <span>{this.currentMatchIndex}</span>
+                                <span> of </span>
+                                <span>{this.totalMatchCount}</span>
+                            </div>
+                        </div>
+                        <div class="search-control">
+                            <button class="search-control-btn search-control-btn-prev"
+                                onClick={() => this.searchNext(true)}
+                                title="Previous">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 8l9 9H3z"></path>
+                                </svg>
+                            </button>
+                            <button class="search-control-btn search-control-btn-next"
+                                onClick={() => this.searchNext()}
+                                title="Next">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 17l9-9H3z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <a class="search-close-btn"
+                        onClick={() => this.closeSearch()}>Close</a>
                 </div>
                 <div id="viewerContainer">
                     <div class="pdf-viewer"></div>
@@ -100,17 +141,42 @@ export class PdfViewerComponent {
     }
 
     handleSearch(e) {
+        this.searchQuery = e.target.value;
         this.pdfFindController.executeCommand('find', {
-            caseSensitive: false, findPrevious: false, highlightAll: true, phraseSearch: true, query: e.target.value
+            caseSensitive: false,
+            findPrevious: false,
+            highlightAll: true,
+            findResultsCount: true,
+            phraseSearch: true,
+            query: e.target.value
         });
+
     }
+
+    searchTimeout: any;
 
     handleSearchNext(e) {
         if (e.key === 'Enter') {
-            this.pdfFindController.executeCommand('findagain', {
-                caseSensitive: false, findPrevious: false, highlightAll: true, phraseSearch: true, query: e.target.value
-            });
+            this.searchNext();
         }
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+        this.searchTimeout = setTimeout(() => {
+            this.updateMatchCount();
+        }, 300);
+    }
+
+    public searchNext(findPrevious = false) {
+        this.pdfFindController.executeCommand('findagain', {
+            caseSensitive: false,
+            findPrevious: findPrevious,
+            highlightAll: false,
+            findResultsCount: true,
+            phraseSearch: true,
+            query: this.searchQuery
+        });
+        this.updateMatchCount();
     }
 
     componentWillLoad() {
@@ -180,12 +246,18 @@ export class PdfViewerComponent {
 
     @Prop() rotation: number = 0;
 
+    @Prop({mutable: true}) searchOpen: boolean = false;
+    searchQuery: string = '';
+
     @Prop() renderText: boolean = true;
     @Prop() originalSize: boolean = false;
     @Prop() stickToPage: boolean = false;
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
     @Prop({mutable: true}) fitToPage: boolean = true;
+
+    @Prop({mutable: true}) currentMatchIndex = 0;
+    @Prop({mutable: true}) totalMatchCount = 0;
 
     componentDidLoad() {
         this._initListeners();
@@ -251,6 +323,32 @@ export class PdfViewerComponent {
             this.zoom = this.maxZoom;
         }
         this.updateSize();
+    }
+
+    private updateMatchCount() {
+        this.currentMatchIndex = this.pdfFindController.selected.matchIdx + 1;
+        this.totalMatchCount = this.pdfFindController.matchCount;
+    }
+
+    public closeSearch() {
+        this.searchOpen = false;
+        this.handleSearch({
+            target: {
+                value: ''
+            }
+        });
+    }
+
+    public toggleSearch() {
+        this.searchOpen = !this.searchOpen;
+        if (this.searchOpen) {
+            setTimeout(() => {
+                const searchEl = this.element.shadowRoot.querySelector('input[name="search"]') as HTMLInputElement;
+                if (searchEl) {
+                    searchEl.focus();
+                }
+            }, 150);
+        }
     }
 
     public updateSize() {
