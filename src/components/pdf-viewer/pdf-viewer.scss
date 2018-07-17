@@ -308,7 +308,7 @@
     padding: 0 15px;
     cursor: default;
     input {
-        width: 48px;
+        width: 20%;
         text-align: center;
         font-size: 13px;
         padding: 4px;
@@ -322,6 +322,11 @@
         transition: all .15s;
         margin: 0 1px;
         -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
     .prev-btn, .next-btn {
         width: 26px;
@@ -357,8 +362,8 @@
         top: 48px;
         height: 48px;
         right: 0;
-        padding: 5px 10px;
-        width: 400px;
+        padding: 5px 0px;
+        width: 100%;
         -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
         -ms-flex-direction: row;
@@ -413,6 +418,7 @@
         -ms-flex-align: stretch;
         align-items: stretch;
         height: 30px;
+        margin: 0px 10px;
         &-result {
             line-height: 20px;
             padding: 5px 10px;
@@ -437,6 +443,7 @@
         font-size: 13px;
         -webkit-transition: all .15s;
         transition: all .15s;
+        margin: 0px 10px;
     }
 }
  .search-control {
