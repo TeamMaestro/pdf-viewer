@@ -21,7 +21,7 @@ export class PdfViewerComponent {
             <div id="mainContainer">
                 <div class="toolbar">
                     <div class="toolbar-left">
-                        <div class="page-section">
+                        <div class="page-section" hidden={this.widthBreak}>
                             <span>Page </span>
                             <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
                                 onClick={() => this.prevPage()}>
@@ -32,7 +32,8 @@ export class PdfViewerComponent {
                                 min="1"
                                 max={this.totalPages}
                                 value={this.currentPage}
-                                onChange={(event) => this.handlePageInput(event)}>
+                                onChange={(event) => this.handlePageInput(event)}
+                                >
                             </input>
                             <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
                                 onClick={() => this.nextPage()}>
@@ -43,6 +44,13 @@ export class PdfViewerComponent {
                             <span> of </span>
                             <span>{this.totalPages}</span>
                         </div>
+                        <div hidden={!this.widthBreak} class="page-number">
+                                <strong>{this.currentPage}</strong>
+                                &nbsp;
+                                /
+                                &nbsp;
+                                <span>{this.totalPages}</span>
+                            </div>
                         <button class="toolbar-btn" title="Zoom Out"
                             disabled={this.zoom <= this.minZoom}
                             onClick={() => this.zoomOut()}>
@@ -191,6 +199,7 @@ export class PdfViewerComponent {
     public pdfLinkService: any;
     public pdfViewer: any;
     public pdfFindController: any;
+    public widthBreak: boolean;
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -215,6 +224,7 @@ export class PdfViewerComponent {
         this.resizeTimeout = setTimeout(() => {
             this.updateSize();
         }, 100);
+        console.log(this.pdfViewer);
     }
 
     private _initListeners() {
@@ -361,6 +371,12 @@ export class PdfViewerComponent {
             if (!this.originalSize || (this.fitToPage && viewport.width > this.element.offsetWidth)) {
                 if (this.fitToPage) {
                     scale = this.getScaleWidth(page.getViewport(1).width);
+                    if (scale < 1.0){
+                        this.widthBreak = true;
+                    }
+                    else{
+                        this.widthBreak = false;
+                    }
                 } else {
                     scale = this.getScaleHeight(page.getViewport(1).height);
                 }
