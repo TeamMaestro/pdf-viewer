@@ -1,3 +1,7 @@
+*[hidden] {
+    display: none !important;
+}
+
 :host {
     display: block;
     height: 100%;
@@ -64,6 +68,15 @@
         }
         svg {
             fill: #fff;
+        }
+        .side-drawer-btn{
+            .right-path{
+                fill: none;
+                stroke:currentColor;
+                stroke-miterlimit:10;
+                stroke-width:2px;
+                opacity:.5
+            }
         }
         &:disabled {
             cursor: not-allowed;
@@ -350,9 +363,6 @@
 
 .search {
     &-container {
-        &[hidden] {
-            display: none;
-        }
         position: absolute;
         top: 48px;
         height: 48px;
@@ -467,4 +477,15 @@
              fill: #83888d;
          }
      }
+ }
+
+ .side-drawer{
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0,0,0,.05);
+    z-index: 10;
+    @media screen and (min-width: 450px) {
+        width: 400px;
+    }
  }
