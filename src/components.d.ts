@@ -45,6 +45,7 @@ declare global {
       'src': string | Uint8Array | PDFSource;
       'stickToPage': boolean;
       'totalMatchCount': number;
+      'widthBreak': boolean;
       'zoom': number;
     }
   }
@@ -86,6 +87,7 @@ declare global {
       'src'?: string | Uint8Array | PDFSource;
       'stickToPage'?: boolean;
       'totalMatchCount'?: number;
+      'widthBreak'?: boolean;
       'zoom'?: number;
     }
   }

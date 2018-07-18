@@ -199,8 +199,6 @@ export class PdfViewerComponent {
     public pdfLinkService: any;
     public pdfViewer: any;
     public pdfFindController: any;
-    public widthBreak: boolean;
-    public fullScreen = '400px';
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -225,7 +223,6 @@ export class PdfViewerComponent {
         this.resizeTimeout = setTimeout(() => {
             this.updateSize();
         }, 100);
-        console.log(this.pdfViewer);
     }
 
     private _initListeners() {
@@ -266,6 +263,7 @@ export class PdfViewerComponent {
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
     @Prop({mutable: true}) fitToPage: boolean = true;
+    @Prop({mutable: true}) widthBreak: boolean = false;
 
     @Prop({mutable: true}) currentMatchIndex = 0;
     @Prop({mutable: true}) totalMatchCount = 0;
@@ -374,11 +372,9 @@ export class PdfViewerComponent {
                     scale = this.getScaleWidth(page.getViewport(1).width);
                     if (scale < 1.0){
                         this.widthBreak = true;
-                        this.fullScreen = '100%';
                     }
                     else{
                         this.widthBreak = false;
-                        this.fullScreen = '400px';
                     }
                 } else {
                     scale = this.getScaleHeight(page.getViewport(1).height);
