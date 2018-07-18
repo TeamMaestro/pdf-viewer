@@ -200,6 +200,7 @@ export class PdfViewerComponent {
     public pdfViewer: any;
     public pdfFindController: any;
     public widthBreak: boolean;
+    public fullScreen = '400px';
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -373,9 +374,11 @@ export class PdfViewerComponent {
                     scale = this.getScaleWidth(page.getViewport(1).width);
                     if (scale < 1.0){
                         this.widthBreak = true;
+                        this.fullScreen = '100%';
                     }
                     else{
                         this.widthBreak = false;
+                        this.fullScreen = '400px';
                     }
                 } else {
                     scale = this.getScaleHeight(page.getViewport(1).height);
