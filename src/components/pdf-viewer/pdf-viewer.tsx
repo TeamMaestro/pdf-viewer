@@ -21,6 +21,15 @@ export class PdfViewerComponent {
             <div id="mainContainer">
                 <div class="toolbar">
                     <div class="toolbar-left">
+                        <button class="toolbar-btn" title="Side Drawer"
+                            onClick={() => this.toggleSideDrawer()}>
+                            <svg class="side-drawer-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g id="e236b97c-3920-4be5-b6a8-a5eb5d413154" data-name="Layer 1">
+                                    <path d="M3.25 1A2.25 2.25 0 0 0 1 3.25v17.5A2.25 2.25 0 0 0 3.25 23H11V1zM8 19.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5zm0-6a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5zm0-6a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5z"></path>
+                                    <path class="right-path" d="M11 2h9.75A1.25 1.25 0 0 1 22 3.25v17.5A1.25 1.25 0 0 1 20.75 22H11"></path>
+                                </g>
+                            </svg>
+                        </button>
                         <div class="page-section">
                             <span>Page </span>
                             <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
@@ -133,8 +142,11 @@ export class PdfViewerComponent {
                     <a class="search-close-btn"
                         onClick={() => this.closeSearch()}>Close</a>
                 </div>
-                <div id="viewerContainer">
+                <div id="viewerContainer"  hidden={this.openDrawer}>
                     <div class="pdf-viewer"></div>
+                </div>
+                <div class="side-drawer" hidden={!this.openDrawer}>
+                    Pages
                 </div>
             </div>
         );
@@ -232,7 +244,7 @@ export class PdfViewerComponent {
             .addEventListener('pagechange', (e: any) => {
                 this.currentPage = e.pageNumber;
                 this.pageChange.emit(e.pageNumber);
-        })
+            })
     }
 
     @Prop() src: string | Uint8Array | PDFSource;
@@ -241,20 +253,20 @@ export class PdfViewerComponent {
         this.loadPDF();
     }
 
-    @Prop({mutable: true}) page: number = 1;
+    @Prop({ mutable: true }) page: number = 1;
     @Watch('page')
     pageChanged(page) {
         this.currentPage = page;
         this.pdfViewer.currentPageNumber = this.currentPage;
     }
 
-    @Prop({mutable: true}) zoom: number = 1;
+    @Prop({ mutable: true }) zoom: number = 1;
     @Prop() minZoom: number = 0.25;
     @Prop() maxZoom: number = 4;
 
     @Prop() rotation: number = 0;
 
-    @Prop({mutable: true}) searchOpen: boolean = false;
+    @Prop({ mutable: true }) searchOpen: boolean = false;
     searchQuery: string = '';
 
     @Prop() renderText: boolean = true;
@@ -262,10 +274,11 @@ export class PdfViewerComponent {
     @Prop() stickToPage: boolean = false;
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
-    @Prop({mutable: true}) fitToPage: boolean = true;
+    @Prop({ mutable: true }) fitToPage: boolean = true;
+    @Prop({ mutable: true }) openDrawer: boolean = false;
 
-    @Prop({mutable: true}) currentMatchIndex = 0;
-    @Prop({mutable: true}) totalMatchCount = 0;
+    @Prop({ mutable: true }) currentMatchIndex = 0;
+    @Prop({ mutable: true }) totalMatchCount = 0;
 
     componentDidLoad() {
         this._initListeners();
@@ -313,6 +326,11 @@ export class PdfViewerComponent {
         this.fitToPage = !this.fitToPage;
         this.zoom = 1;
         this.updateSize();
+    }
+
+    public toggleSideDrawer(){
+        this.openDrawer = !this.openDrawer;
+        console.log(this.openDrawer);
     }
 
     public zoomOut() {
