@@ -2,6 +2,10 @@
     display: none !important;
 }
 
+.hidden{
+    display: none !important;
+}
+
 :host {
     display: block;
     height: 100%;
@@ -479,13 +483,39 @@
      }
  }
 
- .side-drawer{
-    position: relative;
-    width: 100%;
-    min-height: 100%;
-    background-color: rgba(0,0,0,.05);
-    z-index: 10;
-    @media screen and (min-width: 450px) {
-        width: 400px;
+ .sidebarMoving{
+    #sideDrawer{
+        display: none;
     }
  }
+
+ .sidebarOpen{
+    #sideDrawer{
+        display: block;
+    }
+ }
+
+ #sideDrawer{
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    outline: none;
+    z-index: 10000000000;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+ }
+
+ .thumbnail{
+    margin: 20px;
+ }
+
+ .selected .thumbnailSelectionRing .thumbnailImage{
+     border: blue solid 2px;
+ }
+
+ 
+
