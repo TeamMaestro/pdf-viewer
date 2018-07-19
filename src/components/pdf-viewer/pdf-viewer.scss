@@ -306,6 +306,10 @@
     font-size: 13px;
     user-select: none;
     padding: 0 15px;
+    display: block;
+    @media screen and (max-width: 450px){
+        display: none;
+    }
     cursor: default;
     input {
         width: 20%;
@@ -361,6 +365,10 @@
     font-weight: 400;
     strong{
         color: #fff;
+    }
+    display: block;
+    @media screen and (min-width: 450px){
+        display: none;
     }
 }
 

@@ -21,7 +21,7 @@ export class PdfViewerComponent {
             <div id="mainContainer">
                 <div class="toolbar">
                     <div class="toolbar-left">
-                        <div class="page-section" hidden={this.widthBreak}>
+                        <div class="page-section">
                             <span>Page </span>
                             <button class="prev-btn" title="Previous Page" disabled={this.currentPage === 1}
                                 onClick={() => this.prevPage()}>
@@ -44,7 +44,7 @@ export class PdfViewerComponent {
                             <span> of </span>
                             <span>{this.totalPages}</span>
                         </div>
-                        <div hidden={!this.widthBreak} class="page-number">
+                        <div class="page-number">
                                 <strong>{this.currentPage}</strong>
                                 &nbsp;
                                 /
@@ -263,7 +263,6 @@ export class PdfViewerComponent {
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
     @Prop({mutable: true}) fitToPage: boolean = true;
-    @Prop({mutable: true}) widthBreak: boolean = false;
 
     @Prop({mutable: true}) currentMatchIndex = 0;
     @Prop({mutable: true}) totalMatchCount = 0;
@@ -370,12 +369,6 @@ export class PdfViewerComponent {
             if (!this.originalSize || (this.fitToPage && viewport.width > this.element.offsetWidth)) {
                 if (this.fitToPage) {
                     scale = this.getScaleWidth(page.getViewport(1).width);
-                    if (scale < 1.0){
-                        this.widthBreak = true;
-                    }
-                    else{
-                        this.widthBreak = false;
-                    }
                 } else {
                     scale = this.getScaleHeight(page.getViewport(1).height);
                 }
