@@ -3,6 +3,9 @@ import { Component, Prop, Element, Event, EventEmitter, Listen, Watch, State } f
 import { PDFJSStatic, PDFViewerParams, PDFProgressData, PDFDocumentProxy, PDFSource, PDFPageProxy } from 'pdfjs-dist';
 import PDFJS from 'pdfjs-dist/build/pdf';
 import PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
+import PDFJSThumbnailViewer from 'pdfjs-dist/lib/web/pdf_thumbnail_viewer';
+import PDFJSRenderingQueue from 'pdfjs-dist/lib/web/pdf_rendering_queue';
+import PDFJSSidebar from 'pdfjs-dist/lib/web/pdf_sidebar';
 
 declare global {
     const PDFJS: PDFJSStatic;
@@ -21,7 +24,8 @@ export class PdfViewerComponent {
             <div id="mainContainer">
                 <div class="toolbar">
                     <div class="toolbar-left">
-                        <button class="toolbar-btn" title="Side Drawer"
+                        <button id="outlineButton" class="hidden"></button>
+                        <button class="toolbar-btn" title="Side Drawer" id="thumbnailButton"
                             onClick={() => this.toggleSideDrawer()}>
                             <svg class="side-drawer-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g id="e236b97c-3920-4be5-b6a8-a5eb5d413154" data-name="Layer 1">
@@ -142,11 +146,15 @@ export class PdfViewerComponent {
                     <a class="search-close-btn"
                         onClick={() => this.closeSearch()}>Close</a>
                 </div>
-                <div id="viewerContainer" hidden={this.openDrawer}>
-                    <div class="pdf-viewer"></div>
-                </div>
-                <div class="side-drawer" id="sideDrawer" hidden={!this.openDrawer}>
-                    <div class="pdf-viewer"></div>
+                <div id="pdf-outline">
+                    <div id="sideDrawer">
+                        <div class="thumbnail-viewer"></div>
+                    </div>
+                    <div id="outlineViewer">
+                    </div>
+                    <div id="viewerContainer">
+                        <div class="pdf-viewer"></div>
+                    </div>
                 </div>
             </div>
         );
@@ -211,6 +219,10 @@ export class PdfViewerComponent {
     public pdfLinkService: any;
     public pdfViewer: any;
     public pdfFindController: any;
+    public sideDrawer: any;
+    public pdfThumbnailViewer: any;
+    public renderingQueue: any;
+    public eventBus: any;
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -292,6 +304,7 @@ export class PdfViewerComponent {
         PDFJS.disableTextLayer = !this.renderText;
 
         this.pdfLinkService = new PDFJSViewer.PDFLinkService();
+        this.renderingQueue = new PDFJSRenderingQueue.PDFRenderingQueue()
         this.setExternalLinkTarget(this.externalLinkTarget);
 
         const pdfOptions: PDFViewerParams | any = {
@@ -306,6 +319,29 @@ export class PdfViewerComponent {
         this.pdfLinkService.setViewer(this.pdfViewer);
         this.pdfFindController = new PDFJSViewer.PDFFindController({ pdfViewer: this.pdfViewer });
         this.pdfViewer.setFindController(this.pdfFindController);
+        this.eventBus = new PDFJSViewer.EventBus();
+
+        this.pdfThumbnailViewer = new PDFJSThumbnailViewer.PDFThumbnailViewer({
+            container: this.element.shadowRoot.querySelector('#sideDrawer'),
+            linkService: this.pdfLinkService,
+            renderingQueue: this.renderingQueue
+        })
+
+        this.sideDrawer = new PDFJSSidebar.PDFSidebar({
+            pdfViewer: this.pdfViewer,
+            pdfThumbnailViewer: this.pdfThumbnailViewer,
+            toggleButton: this.element.shadowRoot.querySelector('#thumbnailButton'),
+            outerContainer: this.element.shadowRoot.querySelector('#pdf-outline'),
+            viewerContainer: this.element.shadowRoot.querySelector('#viewerContainer'),
+            thumbnailButton: this.element.shadowRoot.querySelector('#outlineButton'),
+            thumbnailView: this.element.shadowRoot.querySelector('#sideDrawer'),
+            outlineButton: this.element.shadowRoot.querySelector('#outlineButton'),
+            outlineView: this.element.shadowRoot.querySelector('#outlineViewer'),
+            attachmentsButton: this.element.shadowRoot.querySelector('#outlineButton'),
+            attachmentsView: this.element.shadowRoot.querySelector('#outlineViewer'),
+            eventBus: this.eventBus
+        });
+
     }
 
     public nextPage() {
@@ -330,6 +366,7 @@ export class PdfViewerComponent {
 
     public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
+        this.sideDrawer.toggle();
     }
 
     public zoomOut() {
@@ -462,12 +499,19 @@ export class PdfViewerComponent {
             this.pdfViewer.setDocument(this._pdf);
         }
 
+        if (this.pdfThumbnailViewer) {
+            this.pdfThumbnailViewer.setDocument(this._pdf);
+        }
+
         if (this.pdfLinkService) {
             this.pdfLinkService.setDocument(this._pdf, null);
         }
 
         this.pdfRender();
+
     }
+
+
 
     private pdfRender() {
         this.renderMultiplePages();
