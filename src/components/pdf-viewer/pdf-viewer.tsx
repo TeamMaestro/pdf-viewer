@@ -142,11 +142,11 @@ export class PdfViewerComponent {
                     <a class="search-close-btn"
                         onClick={() => this.closeSearch()}>Close</a>
                 </div>
-                <div id="viewerContainer"  hidden={this.openDrawer}>
+                <div id="viewerContainer" hidden={this.openDrawer}>
                     <div class="pdf-viewer"></div>
                 </div>
-                <div class="side-drawer" hidden={!this.openDrawer}>
-                    Pages
+                <div class="side-drawer" id="sideDrawer" hidden={!this.openDrawer}>
+                    <div class="pdf-viewer"></div>
                 </div>
             </div>
         );
@@ -328,9 +328,8 @@ export class PdfViewerComponent {
         this.updateSize();
     }
 
-    public toggleSideDrawer(){
+    public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
-        console.log(this.openDrawer);
     }
 
     public zoomOut() {
