@@ -26,6 +26,7 @@ export class PdfViewerComponent {
                     <div class="toolbar-left">
                         <button id="outlineButton" class="hidden"></button>
                         <button class="toolbar-btn" title="Side Drawer" id="thumbnailButton"
+                            hidden={!this.enableSideDrawer}
                             onClick={() => this.toggleSideDrawer()}>
                             <svg class="side-drawer-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g id="e236b97c-3920-4be5-b6a8-a5eb5d413154" data-name="Layer 1">
@@ -286,7 +287,8 @@ export class PdfViewerComponent {
     @Prop() externalLinkTarget: string = 'blank';
     @Prop() canAutoResize: boolean = true;
     @Prop({ mutable: true }) fitToPage: boolean = true;
-    @Prop({ mutable: true }) openDrawer: boolean = false;
+    @Prop({ mutable: true }) openDrawer: boolean = false
+    @Prop() enableSideDrawer: boolean = true;
 
     @Prop({ mutable: true }) currentMatchIndex = 0;
     @Prop({ mutable: true }) totalMatchCount = 0;
