@@ -367,6 +367,12 @@ export class PdfViewerComponent {
     public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
         this.sideDrawer.toggle();
+        if (this.openDrawer){
+            this.zoomOut();
+        }
+        else{
+            this.zoomIn()
+        }
     }
 
     public zoomOut() {
