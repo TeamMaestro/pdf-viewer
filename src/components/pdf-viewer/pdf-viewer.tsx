@@ -249,6 +249,9 @@ export class PdfViewerComponent {
     @Event() onError: EventEmitter;
     @Event() onProgress: EventEmitter;
     @Event() pageChange: EventEmitter;
+    onPageChange(){
+        this.pageChange.emit(this.currentPage);
+    }
 
     @Listen('window:resize')
     public onPageResize() {
