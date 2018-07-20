@@ -249,6 +249,13 @@ export class PdfViewerComponent {
         }, 100);
     }
 
+    // hack to update the selected page
+    @Listen('pageChange')
+    public onPageChange(){
+        this.sideDrawer.toggle();
+        this.sideDrawer.toggle();
+    }
+
     private _initListeners() {
         // Page change event
         this.element.shadowRoot
@@ -366,12 +373,14 @@ export class PdfViewerComponent {
 
     public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
-        this.sideDrawer.toggle();
+        // hack to keep the whole pdf in views
         if (this.openDrawer){
             this.zoomOut();
+            this.sideDrawer.open();
         }
         else{
             this.zoomIn()
+            this.sideDrawer.close();
         }
     }
 
