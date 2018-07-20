@@ -306,7 +306,9 @@
     font-size: 13px;
     user-select: none;
     padding: 0 15px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     @media screen and (max-width: 450px){
         display: none;
     }
