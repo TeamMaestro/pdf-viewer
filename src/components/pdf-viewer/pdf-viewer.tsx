@@ -32,7 +32,8 @@ export class PdfViewerComponent {
                                 min="1"
                                 max={this.totalPages}
                                 value={this.currentPage}
-                                onChange={(event) => this.handlePageInput(event)}>
+                                onChange={(event) => this.handlePageInput(event)}
+                                >
                             </input>
                             <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
                                 onClick={() => this.nextPage()}>
@@ -43,6 +44,13 @@ export class PdfViewerComponent {
                             <span> of </span>
                             <span>{this.totalPages}</span>
                         </div>
+                        <div class="page-number">
+                                <strong>{this.currentPage}</strong>
+                                &nbsp;
+                                /
+                                &nbsp;
+                                <span>{this.totalPages}</span>
+                            </div>
                         <button class="toolbar-btn" title="Zoom Out"
                             disabled={this.zoom <= this.minZoom}
                             onClick={() => this.zoomOut()}>
