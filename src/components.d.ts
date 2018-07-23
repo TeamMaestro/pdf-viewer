@@ -33,10 +33,12 @@ declare global {
     interface StPdfViewer {
       'canAutoResize': boolean;
       'currentMatchIndex': number;
+      'enableSideDrawer': boolean;
       'externalLinkTarget': string;
       'fitToPage': boolean;
       'maxZoom': number;
       'minZoom': number;
+      'openDrawer': boolean;
       'originalSize': boolean;
       'page': number;
       'renderText': boolean;
@@ -70,6 +72,7 @@ declare global {
     export interface StPdfViewerAttributes extends HTMLAttributes {
       'canAutoResize'?: boolean;
       'currentMatchIndex'?: number;
+      'enableSideDrawer'?: boolean;
       'externalLinkTarget'?: string;
       'fitToPage'?: boolean;
       'maxZoom'?: number;
@@ -78,6 +81,7 @@ declare global {
       'onOnError'?: (event: CustomEvent) => void;
       'onOnProgress'?: (event: CustomEvent) => void;
       'onPageChange'?: (event: CustomEvent) => void;
+      'openDrawer'?: boolean;
       'originalSize'?: boolean;
       'page'?: number;
       'renderText'?: boolean;

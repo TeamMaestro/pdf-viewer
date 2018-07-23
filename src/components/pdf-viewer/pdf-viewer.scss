@@ -1,3 +1,11 @@
+*[hidden] {
+    display: none !important;
+}
+
+.hidden{
+    display: none !important;
+}
+
 :host {
     display: block;
     height: 100%;
@@ -64,6 +72,15 @@
         }
         svg {
             fill: #fff;
+        }
+        .side-drawer-btn{
+            .right-path{
+                fill: none;
+                stroke:currentColor;
+                stroke-miterlimit:10;
+                stroke-width:2px;
+                opacity:.5
+            }
         }
         &:disabled {
             cursor: not-allowed;
@@ -375,9 +392,6 @@
 
 .search {
     &-container {
-        &[hidden] {
-            display: none;
-        }
         position: absolute;
         top: 48px;
         height: 48px;
@@ -498,3 +512,65 @@
          }
      }
  }
+
+ .sidebarMoving{
+    #sideDrawer{
+        display: none;
+    }
+ }
+
+ .sidebarOpen{
+    #sideDrawer{
+        display: block;
+    }
+    #viewerContainer{
+        width: -150px !important;
+        left: 150px;
+        @media screen and (max-width: 450px){
+            display: none;
+        }
+    }
+ }
+
+ #sideDrawer{
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    outline: none;
+    z-index: 10000000000;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    width: 150px !important;
+    @media screen and (max-width: 450px){
+        width:100% !important;
+    }
+ }
+
+ .thumbnail{
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 110px !important;
+    height: 146px !important;
+    .thumbnailSelectionRing{
+        width: 110px !important;
+        height: 146px !important;
+        background-color: white;
+        .thumbnailImage{
+            width: 110px !important;
+            height: auto !important;
+        }
+    }
+ }
+
+ .selected .thumbnailSelectionRing .thumbnailImage{
+    box-shadow: 0 0 0 7px #3c97fe;
+    border-radius: 7px;
+ }
+
+ 
+
