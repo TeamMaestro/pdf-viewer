@@ -36,6 +36,7 @@ declare global {
       'allowPrint': boolean;
       'canAutoResize': boolean;
       'currentMatchIndex': number;
+      'enableRotate': boolean;
       'enableSideDrawer': boolean;
       'externalLinkTarget': string;
       'fitToPage': boolean;
@@ -76,6 +77,7 @@ declare global {
       'allowPrint'?: boolean;
       'canAutoResize'?: boolean;
       'currentMatchIndex'?: number;
+      'enableRotate'?: boolean;
       'enableSideDrawer'?: boolean;
       'externalLinkTarget'?: string;
       'fitToPage'?: boolean;
