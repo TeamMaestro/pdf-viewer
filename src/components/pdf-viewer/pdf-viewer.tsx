@@ -50,7 +50,7 @@ export class PdfViewerComponent {
                                 max={this.totalPages}
                                 value={this.currentPage}
                                 onChange={(event) => this.handlePageInput(event)}
-                                >
+                            >
                             </input>
                             <button class="next-btn" title="Next Page" disabled={this.currentPage === this.totalPages}
                                 onClick={() => this.nextPage()}>
@@ -62,12 +62,12 @@ export class PdfViewerComponent {
                             <span>{this.totalPages}</span>
                         </div>
                         <div class="page-number">
-                                <strong>{this.currentPage}</strong>
-                                &nbsp;
-                                /
-                                &nbsp;
+                            <strong>{this.currentPage}</strong>
+                            &nbsp;
+                            /
+                            &nbsp;
                                 <span>{this.totalPages}</span>
-                            </div>
+                        </div>
                         <button class="toolbar-btn" title="Zoom Out"
                             disabled={this.zoom <= this.minZoom}
                             onClick={() => this.zoomOut()}>
@@ -268,7 +268,7 @@ export class PdfViewerComponent {
 
     // hack to update the selected page
     @Listen('pageChange')
-    public onPageChange(){
+    public onPageChange() {
         this.sideDrawer.toggle();
         this.sideDrawer.toggle();
     }
@@ -392,12 +392,15 @@ export class PdfViewerComponent {
 
     public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
+        // hack to load all pages
+        this.sideDrawer.toggle();
+        this.sideDrawer.toggle();
         // hack to keep the whole pdf in views
-        if (this.openDrawer){
+        if (this.openDrawer) {
             this.zoomOut();
             this.sideDrawer.open();
         }
-        else{
+        else {
             this.zoomIn()
             this.sideDrawer.close();
         }
@@ -412,21 +415,25 @@ export class PdfViewerComponent {
     }
 
     public zoomOut() {
-        this.fitToPage = true;
-        this.zoom *= 0.75;
-        if (this.zoom < this.minZoom) {
-            this.zoom = this.minZoom;
-        }
-        this.updateSize();
+        let ticks = 1;
+        var newScale = this.pdfViewer.currentScale;
+        do {
+            newScale = (newScale / 1.1).toFixed(2);
+            newScale = Math.floor(newScale * 10) / 10;
+            newScale = Math.max(this.minZoom, newScale);
+        } while (--ticks > 0 && newScale > this.minZoom);
+        this.pdfViewer.currentScaleValue = newScale;
     }
 
     public zoomIn() {
-        this.fitToPage = true;
-        this.zoom *= 1.25;
-        if (this.zoom > this.maxZoom) {
-            this.zoom = this.maxZoom;
-        }
-        this.updateSize();
+        let ticks = 1;
+        var newScale = this.pdfViewer.currentScale;
+        do {
+            newScale = (newScale * 1.1).toFixed(2);
+            newScale = Math.ceil(newScale * 10) / 10;
+            newScale = Math.min(this.maxZoom, newScale);
+        } while (--ticks > 0 && newScale < this.maxZoom);
+        this.pdfViewer.currentScaleValue = newScale;
     }
 
     private updateMatchCount() {
