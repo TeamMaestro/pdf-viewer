@@ -58,7 +58,7 @@ export class PdfViewerComponent {
                                     <path d="M16.5 12.5l-9 9v-18z"></path>
                                 </svg>
                             </button>
-                            <span> of </span>
+                            <span>&nbsp;of&nbsp;</span>
                             <span>{this.totalPages}</span>
                         </div>
                         <div class="page-number">
@@ -136,7 +136,7 @@ export class PdfViewerComponent {
                         <div class="search-form-result" hidden={this.searchQuery.trim().length < 1}>
                             <div>
                                 <span>{this.currentMatchIndex}</span>
-                                <span> of </span>
+                                <span>&nbsp;of&nbsp;</span>
                                 <span>{this.totalMatchCount}</span>
                             </div>
                         </div>
