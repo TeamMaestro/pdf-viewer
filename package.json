@@ -18,9 +18,11 @@
         "test.watch": "jest --watch",
         "copyPdfWorker": "./copy-pdf-worker.sh"
     },
-    "dependencies": {},
+    "dependencies": {
+        "print-js": "^1.0.47"
+    },
     "devDependencies": {
-        "@stencil/core": "^0.9.5",
+        "@stencil/core": "^0.10.8",
         "@stencil/dev-server": "latest",
         "@stencil/sass": "0.0.5",
         "@stencil/utils": "latest",

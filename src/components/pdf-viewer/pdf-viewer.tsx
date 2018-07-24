@@ -7,6 +7,9 @@ import PDFJSThumbnailViewer from 'pdfjs-dist/lib/web/pdf_thumbnail_viewer';
 import PDFJSRenderingQueue from 'pdfjs-dist/lib/web/pdf_rendering_queue';
 import PDFJSSidebar from 'pdfjs-dist/lib/web/pdf_sidebar';
 
+import printJS from 'print-js';
+
+
 declare global {
     const PDFJS: PDFJSStatic;
 }
@@ -55,7 +58,7 @@ export class PdfViewerComponent {
                                     <path d="M16.5 12.5l-9 9v-18z"></path>
                                 </svg>
                             </button>
-                            <span> of </span>
+                            <span>&nbsp;of&nbsp;</span>
                             <span>{this.totalPages}</span>
                         </div>
                         <div class="page-number">
@@ -104,6 +107,16 @@ export class PdfViewerComponent {
                         </button>
                     </div>
                     <div class="toolbar-right">
+                        <button class="toolbar-btn" title="Print Document"
+                            onClick={() => this.printDialog()}
+                            hidden={!this.allowPrint}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M23 8.5v10a1.5 1.5 0 0 1-1.5 1.5H19v3H5v-3H2.5A1.5 1.5 0 0 1 1 18.5v-10A1.5 1.5 0 0 1 2.5 7H5V1h14v6h2.5A1.5 1.5 0 0 1 23 8.5z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></path>
+                                <circle cx="19" cy="13" r="1"></circle>
+                                <path fill="none" stroke="currentColor" stroke-miterlimit="10" opacity=".25" d="M18.5 8v2h-13V8"></path>
+                                <path d="M23 15v3.5a1.5 1.5 0 0 1-1.5 1.5H18v-3H6v3H2.5A1.5 1.5 0 0 1 1 18.5V15z" opacity=".5"></path>
+                            </svg>
+                        </button>
                         <button class="toolbar-btn" title="Search Document"
                             onClick={() => this.toggleSearch()}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -123,7 +136,7 @@ export class PdfViewerComponent {
                         <div class="search-form-result" hidden={this.searchQuery.trim().length < 1}>
                             <div>
                                 <span>{this.currentMatchIndex}</span>
-                                <span> of </span>
+                                <span>&nbsp;of&nbsp;</span>
                                 <span>{this.totalMatchCount}</span>
                             </div>
                         </div>
@@ -163,7 +176,7 @@ export class PdfViewerComponent {
 
     handlePageInput(e) {
         let newPageNumber = parseInt(e.target.value, 10) || 1;
-        if (this._pdf) {
+        if (this.pdfDocument) {
             newPageNumber = this.getValidPageNumber(newPageNumber);
         }
         this.page = newPageNumber;
@@ -224,11 +237,11 @@ export class PdfViewerComponent {
     public pdfThumbnailViewer: any;
     public renderingQueue: any;
     public eventBus: any;
+    public pdfDocument: any;
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
 
-    private _pdf: PDFDocumentProxy;
     private lastLoaded: string | Uint8Array | PDFSource;
     private resizeTimeout: NodeJS.Timer;
 
@@ -239,7 +252,7 @@ export class PdfViewerComponent {
 
     @Listen('window:resize')
     public onPageResize() {
-        if (!this.canAutoResize || !this._pdf) {
+        if (!this.canAutoResize || !this.pdfDocument) {
             return;
         }
         if (this.resizeTimeout) {
@@ -285,6 +298,7 @@ export class PdfViewerComponent {
     @Prop() maxZoom: number = 4;
 
     @Prop() rotation: number = 0;
+    @Prop({ mutable: true }) allowPrint = true;
 
     @Prop({ mutable: true }) searchOpen: boolean = false;
     searchQuery: string = '';
@@ -334,7 +348,7 @@ export class PdfViewerComponent {
             container: this.element.shadowRoot.querySelector('#sideDrawer'),
             linkService: this.pdfLinkService,
             renderingQueue: this.renderingQueue
-        })
+        });
 
         this.sideDrawer = new PDFJSSidebar.PDFSidebar({
             pdfViewer: this.pdfViewer,
@@ -386,6 +400,14 @@ export class PdfViewerComponent {
         }
     }
 
+    public printDialog() {
+        printJS({
+            printable: this.src,
+            type: 'pdf',
+            showModal: true
+        });
+    }
+
     public zoomOut() {
         this.fitToPage = true;
         this.zoom *= 0.75;
@@ -431,7 +453,7 @@ export class PdfViewerComponent {
     }
 
     public updateSize() {
-        this._pdf.getPage(this.pdfViewer.currentPageNumber).then((page: PDFPageProxy) => {
+        this.pdfDocument.getPage(this.pdfViewer.currentPageNumber).then((page: PDFPageProxy) => {
             const viewport = page.getViewport(this.zoom, this.rotation);
             let scale = this.zoom;
             let stickToPage = true;
@@ -454,8 +476,8 @@ export class PdfViewerComponent {
         if (page < 1) {
             return 1;
         }
-        if (page > this._pdf.numPages) {
-            return this._pdf.numPages;
+        if (page > this.pdfDocument.numPages) {
+            return this.pdfDocument.numPages;
         }
         return page;
     }
@@ -499,8 +521,8 @@ export class PdfViewerComponent {
 
         const src = this.src;
         loadingTask.promise.then((pdf: PDFDocumentProxy) => {
-            this._pdf = pdf;
-            this.totalPages = this._pdf.numPages;
+            this.pdfDocument = pdf;
+            this.totalPages = this.pdfDocument.numPages;
             this.lastLoaded = src;
             this.afterLoadComplete.emit(pdf);
             this.update();
@@ -513,22 +535,20 @@ export class PdfViewerComponent {
         this.setupViewer();
 
         if (this.pdfViewer) {
-            this.pdfViewer.setDocument(this._pdf);
+            this.pdfViewer.setDocument(this.pdfDocument);
         }
 
         if (this.pdfThumbnailViewer) {
-            this.pdfThumbnailViewer.setDocument(this._pdf);
+            this.pdfThumbnailViewer.setDocument(this.pdfDocument);
         }
 
         if (this.pdfLinkService) {
-            this.pdfLinkService.setDocument(this._pdf, null);
+            this.pdfLinkService.setDocument(this.pdfDocument, null);
         }
 
         this.pdfRender();
 
     }
-
-
 
     private pdfRender() {
         this.renderMultiplePages();
