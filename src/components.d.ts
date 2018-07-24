@@ -31,6 +31,7 @@ declare global {
 
   namespace StencilComponents {
     interface StPdfViewer {
+      'allowPrint': boolean;
       'canAutoResize': boolean;
       'currentMatchIndex': number;
       'enableSideDrawer': boolean;
@@ -70,6 +71,7 @@ declare global {
   }
   namespace JSXElements {
     export interface StPdfViewerAttributes extends HTMLAttributes {
+      'allowPrint'?: boolean;
       'canAutoResize'?: boolean;
       'currentMatchIndex'?: number;
       'enableSideDrawer'?: boolean;
