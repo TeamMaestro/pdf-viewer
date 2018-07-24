@@ -331,6 +331,7 @@ export class PdfViewerComponent {
 
         this.pdfLinkService = new PDFJSViewer.PDFLinkService();
         this.renderingQueue = new PDFJSRenderingQueue.PDFRenderingQueue()
+        this.renderingQueue.setViewer(this.pdfViewer);
         this.setExternalLinkTarget(this.externalLinkTarget);
 
         const pdfOptions: PDFViewerParams | any = {
@@ -352,6 +353,8 @@ export class PdfViewerComponent {
             linkService: this.pdfLinkService,
             renderingQueue: this.renderingQueue
         });
+
+        this.renderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
 
         this.sideDrawer = new PDFJSSidebar.PDFSidebar({
             pdfViewer: this.pdfViewer,
