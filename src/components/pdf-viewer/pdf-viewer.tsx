@@ -105,6 +105,36 @@ export class PdfViewerComponent {
                                 <path d="M13 11h1.5v2H13zm-3.5 0H11v2H9.5z" opacity=".33"></path>
                             </svg>
                         </button>
+                        <button class="toolbar-btn" title="Rotate Counter Clockwise"
+                            onClick={() => this.rotateCounterClockwise()}
+                            hidden={!this.enableRotate}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g data-name="Layer 1">
+                                    <path d="M22.75 1H1.25A1.25 1.25 0 0 0 0 2.25v19.5A1.25 1.25 0 0 0 1.25 23h21.5A1.25 1.25 0 0 0 24 21.75V2.25A1.25 1.25 0 0 0 22.75 1zM18 20H6V4h12z" opacity=".2"></path>
+                                    <path d="M18 20H6V4h12zM4 2v20h16V2z" opacity=".5"></path><path d="M11 8l1 1-1 1v2.5L7 9l4-3.5V8z"></path>
+                                    <path d="M8.46 16.54A5 5 0 0 1 7 13h2a3 3 0 0 0 .88 2.12z" opacity=".2"></path>
+                                    <path d="M12 18a5 5 0 0 1-3.54-1.46l1.42-1.42A3 3 0 0 0 12 16z" opacity=".4"></path>
+                                    <path d="M15.54 16.54l-1.42-1.42A3 3 0 0 0 15 13h2a5 5 0 0 1-1.46 3.54z" opacity=".8"></path>
+                                    <path d="M12 18v-2a3 3 0 0 0 2.12-.88l1.42 1.42A5 5 0 0 1 12 18z" opacity=".6"></path>
+                                    <path d="M17 13h-2a3 3 0 0 0-3-3h-1V8h1a5 5 0 0 1 5 5z"></path>
+                                </g>
+                            </svg>
+                        </button>
+                        <button class="toolbar-btn" title="Rotate Clockwise"
+                            onClick={() => this.rotateClockwise()}
+                            hidden={!this.enableRotate}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g data-name="Layer 1"><path d="M22.75 1H1.25A1.25 1.25 0 0 0 0 2.25v19.5A1.25 1.25 0 0 0 1.25 23h21.5A1.25 1.25 0 0 0 24 21.75V2.25A1.25 1.25 0 0 0 22.75 1zM18 20H6V4h12z" opacity=".2"></path>
+                                    <path d="M18 20H6V4h12zM4 2v20h16V2z" opacity=".5"></path>
+                                    <path d="M12 8l-1 1 1 1v2l3-3-3-3v2z"></path>
+                                    <path d="M15.54 16.54l-1.42-1.42A3 3 0 0 0 15 13h2a5 5 0 0 1-1.46 3.54z" opacity=".2"></path>
+                                    <path d="M12 18v-2a3 3 0 0 0 2.12-.88l1.42 1.42A5 5 0 0 1 12 18z" opacity=".4"></path>
+                                    <path d="M8.46 16.54A5 5 0 0 1 7 13h2a3 3 0 0 0 .88 2.12z" opacity=".8"></path>
+                                    <path d="M12 18a5 5 0 0 1-3.54-1.46l1.42-1.42A3 3 0 0 0 12 16z" opacity=".6"></path>
+                                    <path d="M9 13H7a5 5 0 0 1 5-5v2a3 3 0 0 0-3 3z"></path>
+                                </g>
+                            </svg>
+                        </button>
                     </div>
                     <div class="toolbar-right">
                         <button class="toolbar-btn" title="Print Document"
@@ -249,7 +279,7 @@ export class PdfViewerComponent {
     @Event() onError: EventEmitter;
     @Event() onProgress: EventEmitter;
     @Event() pageChange: EventEmitter;
-    pageChangeEvent(){
+    pageChangeEvent() {
         this.pageChange.emit(this.currentPage);
     }
 
@@ -314,6 +344,7 @@ export class PdfViewerComponent {
     @Prop({ mutable: true }) fitToPage: boolean = true;
     @Prop({ mutable: true }) openDrawer: boolean = false
     @Prop() enableSideDrawer: boolean = true;
+    @Prop() enableRotate: boolean = true;
 
     @Prop({ mutable: true }) currentMatchIndex = 0;
     @Prop({ mutable: true }) totalMatchCount = 0;
@@ -407,6 +438,24 @@ export class PdfViewerComponent {
             this.zoomIn()
             this.sideDrawer.close();
         }
+    }
+
+    public rotateClockwise() {
+        let delta = 90;
+        if (!this.pdfDocument) {
+            return;
+        }
+        var newRotation = (this.pdfViewer.pagesRotation + 360 + delta) % 360;
+        this.pdfViewer.pagesRotation = newRotation;
+    }
+
+    public rotateCounterClockwise() {
+        let delta = -90;
+        if (!this.pdfDocument) {
+            return;
+        }
+        var newRotation = (this.pdfViewer.pagesRotation + 360 + delta) % 360;
+        this.pdfViewer.pagesRotation = newRotation;
     }
 
     public printDialog() {
