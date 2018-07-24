@@ -249,7 +249,7 @@ export class PdfViewerComponent {
     @Event() onError: EventEmitter;
     @Event() onProgress: EventEmitter;
     @Event() pageChange: EventEmitter;
-    onPageChange(){
+    pageChangeEvent(){
         this.pageChange.emit(this.currentPage);
     }
 
