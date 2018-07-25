@@ -135,6 +135,15 @@ export class PdfViewerComponent {
                                 </g>
                             </svg>
                         </button>
+                        <button class="toolbar-btn" title="Highlight"
+                            onClick={() => this.highlight()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M5.23 17.613l1.414 1.414-1.768 1.768a1 1 0 0 1-1.414 0 1 1 0 0 1 0-1.414l1.768-1.768z"></path>
+                                <path d="M13 4.17l-.71.71c-6.36 6.36-4.24 8.49-4.24 8.49l-1.76 1.76a1.5 1.5 0 0 0 0 2.12L7 18a1.5 1.5 0 0 0 2.12 0l1.77-1.77S13 18.32 19.37 12l.71-.71" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" opacity=".9" stroke="currentColor"></path>
+                                <path opacity=".25" d="M13.708 4.882l5.657 5.657-1.414 1.414-5.657-5.657z"></path>
+                                <path opacity=".5" d="M9.467 13.367l1.414 1.414-.707.707-1.414-1.414z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="toolbar-right">
                         <button class="toolbar-btn" title="Print Document"
@@ -189,6 +198,28 @@ export class PdfViewerComponent {
                     </div>
                     <a class="search-close-btn"
                         onClick={() => this.closeSearch()}>Close</a>
+                </div>
+                <div class="toolbar-secondary" hidden={!this.openSecondaryToolbar}>
+                    <div class="toolbar-left">
+                        <button class="color color-yellow" onClick={() => this.changeHighlightColor("yellow")}>
+                        </button>
+                        <button class="color color-green" onClick={() => this.changeHighlightColor("green")}>
+                        </button>
+                        <button class="color color-blue" onClick={() => this.changeHighlightColor("blue")}>
+                        </button>
+                        <button class="color color-red" onClick={() => this.changeHighlightColor("red")}>
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="toolbar-secondary-btn" title="Delete"
+                            onClick={() => this.removeHighlight()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19 9l-1 10.63A1.5 1.5 0 0 1 16.55 21h-9.1A1.5 1.5 0 0 1 6 19.63L5 9zM8.5 4.5V6h7V4.5A1.5 1.5 0 0 0 14 3h-4a1.5 1.5 0 0 0-1.5 1.5z" fill="none" stroke-miterlimit="10" stroke-width="2" stroke="currentColor"></path>
+                                <path d="M4 9h16l-.66-2a1.5 1.5 0 0 0-1.42-1H6.08a1.5 1.5 0 0 0-1.42 1z" fill="none" stroke-linejoin="round" stroke-width="2" stroke="currentColor"></path>
+                                <path opacity=".5" d="M11 11h2v8h-2zm5.07 7.98h-1.52l.53-7.98h1.52l-.53 7.98zm-8.14 0h1.52L8.92 11H7.4l.53 7.98z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <div id="pdf-outline">
                     <div id="sideDrawer">
@@ -268,9 +299,12 @@ export class PdfViewerComponent {
     public renderingQueue: any;
     public eventBus: any;
     public pdfDocument: any;
+    public divId: number = 0;
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
+    @State() openSecondaryToolbar: boolean = false;
+    @State() currentSelectedDiv: any;
 
     private lastLoaded: string | Uint8Array | PDFSource;
     private resizeTimeout: NodeJS.Timer;
@@ -331,7 +365,7 @@ export class PdfViewerComponent {
     @Prop() maxZoom: number = 4;
 
     @Prop() rotation: number = 0;
-    @Prop({ mutable: true }) allowPrint = true;
+    @Prop({ mutable: true }) allowPrint = false;
 
     @Prop({ mutable: true }) searchOpen: boolean = false;
     searchQuery: string = '';
@@ -344,7 +378,7 @@ export class PdfViewerComponent {
     @Prop({ mutable: true }) fitToPage: boolean = true;
     @Prop({ mutable: true }) openDrawer: boolean = false
     @Prop() enableSideDrawer: boolean = true;
-    @Prop() enableRotate: boolean = true;
+    @Prop() enableRotate: boolean = false;
 
     @Prop({ mutable: true }) currentMatchIndex = 0;
     @Prop({ mutable: true }) totalMatchCount = 0;
@@ -440,6 +474,10 @@ export class PdfViewerComponent {
         }
     }
 
+    public toggleSecondaryToolbar() {
+        this.openSecondaryToolbar = !this.openSecondaryToolbar;
+    }
+
     public rotateClockwise() {
         let delta = 90;
         if (!this.pdfDocument) {
@@ -456,6 +494,57 @@ export class PdfViewerComponent {
         }
         var newRotation = (this.pdfViewer.pagesRotation + 360 + delta) % 360;
         this.pdfViewer.pagesRotation = newRotation;
+    }
+
+    public highlight() {
+        var selection = this.element.shadowRoot.getSelection().getRangeAt(0);
+        var scrollTop = this.element.shadowRoot.querySelector('#viewerContainer').scrollTop;
+        if (selection.commonAncestorContainer == selection.startContainer){
+            var page = selection.commonAncestorContainer.parentNode.parentNode.parentElement.dataset.pageNumber;
+        }
+        else{
+            var page = selection.commonAncestorContainer.parentElement.dataset.pageNumber;
+        }
+        var pageOffset = (parseInt(page)-1)*5;
+        var rect = selection.getBoundingClientRect();
+        var div = document.createElement("div");
+        div.id = 'div'+this.divId;
+        if (parseInt(page) > 1){
+            div.style.top = (((rect.top-((1755*(parseInt(page)-1))-scrollTop))-80)-pageOffset).toString()+'px';
+        }
+        else {
+            div.style.top = (((rect.top-((1755*(parseInt(page)-1))-scrollTop))-114)-pageOffset).toString()+'px';
+        }
+        div.style.left = (rect.left-12).toString()+'px';
+        div.style.width = rect.width.toString()+'px';
+        div.style.height = rect.height.toString()+'px';
+        div.classList.add('highlighted');
+        if (selection.commonAncestorContainer == selection.startContainer){
+            selection.commonAncestorContainer.parentNode.parentNode.appendChild(div);
+        }
+        else{
+            selection.commonAncestorContainer.appendChild(div);
+        }
+
+        
+
+        this.element.shadowRoot
+        .querySelector("#div"+this.divId)
+        .addEventListener('click', (e: any) => {
+            this.currentSelectedDiv = e.path[0];
+            this.openSecondaryToolbar = true;
+        })
+        this.divId ++;
+    }
+
+    public removeHighlight(){
+        this.currentSelectedDiv.parentNode.removeChild(this.currentSelectedDiv);
+        this.openSecondaryToolbar = false;
+    }
+
+    public changeHighlightColor(color){
+        console.log(this.currentSelectedDiv);
+        this.currentSelectedDiv.style.backgroundColor = color;
     }
 
     public printDialog() {
