@@ -300,6 +300,8 @@ export class PdfViewerComponent {
     public eventBus: any;
     public pdfDocument: any;
     public divId: number = 0;
+    public annotations: any[] = [];
+    public annotationPages: any[] = [];
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -521,12 +523,14 @@ export class PdfViewerComponent {
         div.classList.add('highlighted');
         if (selection.commonAncestorContainer == selection.startContainer){
             selection.commonAncestorContainer.parentNode.parentNode.appendChild(div);
+            this.annotationPages.push(selection.commonAncestorContainer.parentNode.parentNode);
         }
         else{
             selection.commonAncestorContainer.appendChild(div);
+            this.annotationPages.push(selection.commonAncestorContainer);
         }
 
-        
+        this.annotations.push(this.element.shadowRoot.querySelector('#div'+this.divId));
 
         this.element.shadowRoot
         .querySelector("#div"+this.divId)
@@ -538,13 +542,24 @@ export class PdfViewerComponent {
     }
 
     public removeHighlight(){
+        this.annotations.splice(this.annotations.indexOf(this.currentSelectedDiv),1);
+        this.annotationPages.splice(this.annotations.indexOf(this.currentSelectedDiv), 1);
         this.currentSelectedDiv.parentNode.removeChild(this.currentSelectedDiv);
         this.openSecondaryToolbar = false;
     }
 
     public changeHighlightColor(color){
-        console.log(this.currentSelectedDiv);
+        var index = this.annotations.indexOf(this.currentSelectedDiv);
         this.currentSelectedDiv.style.backgroundColor = color;
+        this.annotations[index] = this.currentSelectedDiv;
+    }
+
+    public rerenderAnnotations(){
+        for(var i = 0; i < this.annotations.length; i++){
+            this.annotationPages[i].insertBefore(this.annotations[i], this.annotationPages[i].childNodes[this.annotationPages[i].childNodes.length-2]);
+            console.log(this.annotationPages[i]);
+        }
+        
     }
 
     public printDialog() {
@@ -564,6 +579,7 @@ export class PdfViewerComponent {
             newScale = Math.max(this.minZoom, newScale);
         } while (--ticks > 0 && newScale > this.minZoom);
         this.pdfViewer.currentScaleValue = newScale;
+        this.rerenderAnnotations();
     }
 
     public zoomIn() {
@@ -575,6 +591,7 @@ export class PdfViewerComponent {
             newScale = Math.min(this.maxZoom, newScale);
         } while (--ticks > 0 && newScale < this.maxZoom);
         this.pdfViewer.currentScaleValue = newScale;
+        this.rerenderAnnotations();
     }
 
     private updateMatchCount() {
@@ -621,6 +638,7 @@ export class PdfViewerComponent {
 
             this.pdfViewer._setScale(scale, stickToPage);
         });
+        this.rerenderAnnotations();
     }
 
     private getValidPageNumber(page: number): number {
