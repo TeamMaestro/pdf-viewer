@@ -365,6 +365,7 @@
         justify-content: center;
         -ms-touch-action: none;
         touch-action: none;
+        box-sizing: content-box;
         svg {
             fill: #fff;
         }
