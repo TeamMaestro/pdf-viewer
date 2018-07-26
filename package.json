@@ -19,6 +19,7 @@
         "copyPdfWorker": "./copy-pdf-worker.sh"
     },
     "dependencies": {
+        "hammerjs": "^2.0.8",
         "print-js": "^1.0.47"
     },
     "devDependencies": {

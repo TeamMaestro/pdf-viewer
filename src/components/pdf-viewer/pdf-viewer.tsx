@@ -1,5 +1,7 @@
 import { Component, Prop, Element, Event, EventEmitter, Listen, Watch, State } from '@stencil/core';
 
+import Hammer from 'hammerjs';
+
 import { PDFJSStatic, PDFViewerParams, PDFProgressData, PDFDocumentProxy, PDFSource, PDFPageProxy } from 'pdfjs-dist';
 import PDFJS from 'pdfjs-dist/build/pdf';
 import PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
@@ -70,7 +72,7 @@ export class PdfViewerComponent {
                         </div>
                         <button class="toolbar-btn" title="Zoom Out"
                             disabled={this.zoom <= this.minZoom}
-                            onClick={() => this.zoomOut()}>
+                            onClick={() => this.zoomOut(1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M4.5 8h9v2h-9z" opacity=".5"></path>
                                 <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
@@ -79,7 +81,7 @@ export class PdfViewerComponent {
                         </button>
                         <button class="toolbar-btn" title="Zoom In"
                             disabled={this.zoom >= this.maxZoom}
-                            onClick={() => this.zoomIn()}>
+                            onClick={() => this.zoomIn(1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path opacity=".5" d="M13.5 8H10V4.5H8V8H4.5v2H8v3.5h2V10h3.5V8z"></path>
                                 <path d="M9 18a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9zM9 2a7 7 0 1 0 7 7 7.008 7.008 0 0 0-7-7z"></path>
@@ -269,6 +271,10 @@ export class PdfViewerComponent {
     public eventBus: any;
     public pdfDocument: any;
 
+    public hammertime;
+    public zoomOutScale = 0;
+    public zoomInScale = 0;
+
     @State() currentPage: number = 1;
     @State() totalPages: number;
 
@@ -344,7 +350,7 @@ export class PdfViewerComponent {
     @Prop({ mutable: true }) fitToPage: boolean = true;
     @Prop({ mutable: true }) openDrawer: boolean = false
     @Prop() enableSideDrawer: boolean = true;
-    @Prop() enableRotate: boolean = true;
+    @Prop() enableRotate: boolean = false;
 
     @Prop({ mutable: true }) currentMatchIndex = 0;
     @Prop({ mutable: true }) totalMatchCount = 0;
@@ -384,6 +390,19 @@ export class PdfViewerComponent {
             linkService: this.pdfLinkService,
             renderingQueue: this.renderingQueue
         });
+
+        this.hammertime = new Hammer(this.element.shadowRoot.querySelector('#viewerContainer'), {touchAction: "auto"});
+        this.hammertime.get('pinch').set({enable: true});
+        this.hammertime.on("pinchin", (ev) => {
+            this.zoomInScale = 0;
+            this.zoomOut(ev.scale - this.zoomOutScale);
+            this.zoomOutScale = ev.scale;
+        });
+        this.hammertime.on('pinchout', (ev) => {
+            this.zoomOutScale = 0;
+            this.zoomIn(ev.scale - this.zoomInScale);
+            this.zoomInScale = ev.scale;
+        })
 
         this.renderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
 
@@ -431,11 +450,11 @@ export class PdfViewerComponent {
         this.sideDrawer.toggle();
         // hack to keep the whole pdf in views
         if (this.openDrawer) {
-            this.zoomOut();
+            this.zoomOut(1);
             this.sideDrawer.open();
         }
         else {
-            this.zoomIn()
+            this.zoomIn(1)
             this.sideDrawer.close();
         }
     }
@@ -466,8 +485,7 @@ export class PdfViewerComponent {
         });
     }
 
-    public zoomOut() {
-        let ticks = 1;
+    public zoomOut(ticks) {
         var newScale = this.pdfViewer.currentScale;
         do {
             newScale = (newScale / 1.1).toFixed(2);
@@ -477,8 +495,7 @@ export class PdfViewerComponent {
         this.pdfViewer.currentScaleValue = newScale;
     }
 
-    public zoomIn() {
-        let ticks = 1;
+    public zoomIn(ticks) {
         var newScale = this.pdfViewer.currentScale;
         do {
             newScale = (newScale * 1.1).toFixed(2);
