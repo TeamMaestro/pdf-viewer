@@ -397,11 +397,13 @@ export class PdfViewerComponent {
             this.zoomInScale = 0;
             this.zoomOut(ev.scale - this.zoomOutScale);
             this.zoomOutScale = ev.scale;
+            console.log(ev, this.zoomOutScale);
         });
         this.hammertime.on('pinchout', (ev) => {
             this.zoomOutScale = 0;
             this.zoomIn(ev.scale - this.zoomInScale);
             this.zoomInScale = ev.scale;
+            console.log(ev, this.zoomInScale);
         })
 
         this.renderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
