@@ -272,8 +272,8 @@ export class PdfViewerComponent {
     public pdfDocument: any;
 
     public hammertime;
-    public zoomOutScale = 0;
-    public zoomInScale = 0;
+    public distance = 0;
+    public previousScale = 0;
 
     @State() currentPage: number = 1;
     @State() totalPages: number;
@@ -391,19 +391,37 @@ export class PdfViewerComponent {
             renderingQueue: this.renderingQueue
         });
 
-        this.hammertime = new Hammer(this.element.shadowRoot.querySelector('#viewerContainer'), {touchAction: "auto"});
-        this.hammertime.get('pinch').set({enable: true});
-        this.hammertime.on("pinchin", (ev) => {
-            this.zoomInScale = 0;
-            this.zoomOut(ev.scale - this.zoomOutScale);
-            this.zoomOutScale = ev.scale;
-            console.log(ev, this.zoomOutScale);
+        this.hammertime = new Hammer.Manager(this.element.shadowRoot.querySelector('#mainContainer'), { touchAction: "auto" });
+        var pinch = new Hammer.Pinch();
+        var rotate = new Hammer.Rotate();
+        pinch.recognizeWith(rotate);
+        this.hammertime.add([pinch, rotate]);
+        this.hammertime.on('pinch rotate', (ev) => {
+            var scale;
+            if ((this.distance - ev.distance) > -50 && (this.distance - ev.distance) < 50 && this.distance != ev.distance) {
+                if (this.previousScale - ev.scale > 0) {
+                    scale = (parseInt(this.pdfViewer.currentScaleValue) + ((this.distance - ev.distance) / 100));
+                }
+                else if (this.previousScale - ev.scale < 0) {
+                    scale = (parseInt(this.pdfViewer.currentScaleValue) + ((this.distance + ev.distance) / 100));
+                }
+                if (scale < this.minZoom) {
+                    scale = this.minZoom;
+                }
+                if (scale > this.maxZoom) {
+                    scale = this.maxZoom;
+                }
+                if (scale && ((scale - this.pdfViewer.currentScaleValue) > -0.25 &&  (scale - this.pdfViewer.currentScaleValue) < 0.25)){
+                    this.pdfViewer.currentScaleValue = scale.toString();
+                }
+            }
+            this.distance = ev.distance;
+            this.previousScale = ev.scale
+
         });
-        this.hammertime.on('pinchout', (ev) => {
-            this.zoomOutScale = 0;
-            this.zoomIn(ev.scale - this.zoomInScale);
-            this.zoomInScale = ev.scale;
-            console.log(ev, this.zoomInScale);
+        this.hammertime.on('pinchend', () => {
+            this.distance = 0;
+            this.previousScale = 0;
         })
 
         this.renderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
