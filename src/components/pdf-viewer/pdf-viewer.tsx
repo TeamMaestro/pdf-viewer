@@ -296,13 +296,6 @@ export class PdfViewerComponent {
         }, 100);
     }
 
-    // hack to update the selected page
-    @Listen('pageChange')
-    public onPageChange() {
-        this.sideDrawer.toggle();
-        this.sideDrawer.toggle();
-    }
-
     private _initListeners() {
         // Page change event
         this.element.shadowRoot
@@ -331,7 +324,7 @@ export class PdfViewerComponent {
     @Prop() maxZoom: number = 4;
 
     @Prop() rotation: number = 0;
-    @Prop({ mutable: true }) allowPrint = true;
+    @Prop({ mutable: true }) allowPrint = false;
 
     @Prop({ mutable: true }) searchOpen: boolean = false;
     searchQuery: string = '';
@@ -362,7 +355,6 @@ export class PdfViewerComponent {
 
         this.pdfLinkService = new PDFJSViewer.PDFLinkService();
         this.renderingQueue = new PDFJSRenderingQueue.PDFRenderingQueue()
-        this.renderingQueue.setViewer(this.pdfViewer);
         this.setExternalLinkTarget(this.externalLinkTarget);
 
         const pdfOptions: PDFViewerParams | any = {
@@ -374,6 +366,7 @@ export class PdfViewerComponent {
         };
 
         this.pdfViewer = new PDFJSViewer.PDFViewer(pdfOptions);
+        this.renderingQueue.setViewer(this.pdfViewer);
         this.pdfLinkService.setViewer(this.pdfViewer);
         this.pdfFindController = new PDFJSViewer.PDFFindController({ pdfViewer: this.pdfViewer });
         this.pdfViewer.setFindController(this.pdfFindController);
@@ -386,6 +379,7 @@ export class PdfViewerComponent {
         });
 
         this.renderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
+        this.renderingQueue.isThumbnailViewEnabled = true;
 
         this.sideDrawer = new PDFJSSidebar.PDFSidebar({
             pdfViewer: this.pdfViewer,
@@ -426,13 +420,12 @@ export class PdfViewerComponent {
 
     public toggleSideDrawer() {
         this.openDrawer = !this.openDrawer;
-        // hack to load all pages
-        this.sideDrawer.toggle();
-        this.sideDrawer.toggle();
-        // hack to keep the whole pdf in views
         if (this.openDrawer) {
             this.zoomOut();
             this.sideDrawer.open();
+            setTimeout(() => {
+                this.pdfThumbnailViewer.forceRendering();
+            })
         }
         else {
             this.zoomIn()
