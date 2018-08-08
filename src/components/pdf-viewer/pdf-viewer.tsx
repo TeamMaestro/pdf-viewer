@@ -9,7 +9,6 @@ import PDFJSSidebar from 'pdfjs-dist/lib/web/pdf_sidebar';
 
 import printJS from 'print-js';
 
-
 declare global {
     const PDFJS: PDFJSStatic;
 }
@@ -275,6 +274,7 @@ export class PdfViewerComponent {
     private lastLoaded: string | Uint8Array | PDFSource;
     private resizeTimeout: NodeJS.Timer;
 
+    @Event() onLinkClick: EventEmitter;
     @Event() afterLoadComplete: EventEmitter;
     @Event() onError: EventEmitter;
     @Event() onProgress: EventEmitter;
@@ -304,6 +304,21 @@ export class PdfViewerComponent {
                 this.currentPage = e.pageNumber;
                 this.pageChange.emit(e.pageNumber);
             })
+
+        this.element.shadowRoot
+            .querySelector('#viewerContainer')
+            .addEventListener('click', (e: any) => {
+                e.preventDefault();
+                const link = (e.target as any).closest('.linkAnnotation > a');
+                if (link) {
+                    const href = (e.target as any).closest('.linkAnnotation > a').href || '';
+                    // Ignore internal links to the same document
+                    if (href.indexOf(`${window.location.host}/#`) !== -1) {
+                        return;
+                    }
+                    this.onLinkClick.emit(href);
+                }
+        });
     }
 
     @Prop() src: string | Uint8Array | PDFSource;

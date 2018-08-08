@@ -85,6 +85,7 @@ declare global {
       'minZoom'?: number;
       'onAfterLoadComplete'?: (event: CustomEvent) => void;
       'onOnError'?: (event: CustomEvent) => void;
+      'onOnLinkClick'?: (event: CustomEvent) => void;
       'onOnProgress'?: (event: CustomEvent) => void;
       'onPageChange'?: (event: CustomEvent) => void;
       'openDrawer'?: boolean;
