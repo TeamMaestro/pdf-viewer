@@ -32,7 +32,7 @@ import {
 declare global {
 
   namespace StencilComponents {
-    interface StPdfViewer {
+    interface HivePdfViewer {
       'allowPrint': boolean;
       'canAutoResize': boolean;
       'currentMatchIndex': number;
@@ -55,25 +55,25 @@ declare global {
     }
   }
 
-  interface HTMLStPdfViewerElement extends StencilComponents.StPdfViewer, HTMLStencilElement {}
+  interface HTMLHivePdfViewerElement extends StencilComponents.HivePdfViewer, HTMLStencilElement {}
 
-  var HTMLStPdfViewerElement: {
-    prototype: HTMLStPdfViewerElement;
-    new (): HTMLStPdfViewerElement;
+  var HTMLHivePdfViewerElement: {
+    prototype: HTMLHivePdfViewerElement;
+    new (): HTMLHivePdfViewerElement;
   };
   interface HTMLElementTagNameMap {
-    'st-pdf-viewer': HTMLStPdfViewerElement;
+    'hive-pdf-viewer': HTMLHivePdfViewerElement;
   }
   interface ElementTagNameMap {
-    'st-pdf-viewer': HTMLStPdfViewerElement;
+    'hive-pdf-viewer': HTMLHivePdfViewerElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'st-pdf-viewer': JSXElements.StPdfViewerAttributes;
+      'hive-pdf-viewer': JSXElements.HivePdfViewerAttributes;
     }
   }
   namespace JSXElements {
-    export interface StPdfViewerAttributes extends HTMLAttributes {
+    export interface HivePdfViewerAttributes extends HTMLAttributes {
       'allowPrint'?: boolean;
       'canAutoResize'?: boolean;
       'currentMatchIndex'?: number;

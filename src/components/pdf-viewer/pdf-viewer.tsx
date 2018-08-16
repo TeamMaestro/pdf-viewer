@@ -14,7 +14,7 @@ declare global {
 }
 
 @Component({
-    tag: 'st-pdf-viewer',
+    tag: 'hive-pdf-viewer',
     styleUrl: 'pdf-viewer.scss',
     shadow: true,
     assetsDir: 'vendor'

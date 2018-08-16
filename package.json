@@ -1,5 +1,5 @@
 {
-    "name": "@teammaestro/stencil-pdf-viewer",
+    "name": "@teamhive/stencil-pdf-viewer",
     "version": "0.1.1",
     "description": "Stencil PDF Viewer",
     "module": "dist/esm/index.js",
@@ -33,9 +33,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/TeamMaestro/stencil-pdf-viewer.git"
+        "url": "git+https://github.com/TeamHive/stencil-pdf-viewer.git"
     },
-    "author": "TeamMaestro",
+    "author": "TeamHive",
     "license": "MIT",
     "jest": {
         "transform": {
