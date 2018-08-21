@@ -34,6 +34,8 @@
     bottom: 0;
     left: 0;
     outline: none;
+    padding-top: var(--pdf-viewer-top-offset, 0);
+    padding-bottom: var(--pdf-viewer-bottom-offset, 0);
 }
 
 //temp
