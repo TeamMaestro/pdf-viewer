@@ -147,7 +147,8 @@ export class PdfViewerComponent {
                             </svg>
                         </button>
                         <button class="toolbar-btn" title="Search Document"
-                            onClick={() => this.toggleSearch()}>
+                            onClick={() => this.toggleSearch()}
+                            hidden={!this.enableSearch}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M21.48 18.95l-4.15-4.15-2.53 2.53 4.15 4.15a1.08 1.08 0 0 0 1.52 0l1-1a1.08 1.08 0 0 0 .01-1.53z" opacity=".75"></path>
                                 <circle cx="9.5" cy="9.5" r="6.5" fill="none" stroke-miterlimit="10" stroke-width="2" stroke="currentColor"></circle>
@@ -353,6 +354,7 @@ export class PdfViewerComponent {
     @Prop({ mutable: true }) openDrawer: boolean = false
     @Prop() enableSideDrawer: boolean = true;
     @Prop() enableRotate: boolean = true;
+    @Prop() enableSearch: boolean = true;
 
     @Prop({ mutable: true }) currentMatchIndex = 0;
     @Prop({ mutable: true }) totalMatchCount = 0;
