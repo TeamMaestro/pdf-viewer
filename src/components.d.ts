@@ -7,10 +7,10 @@ import '@stencil/core';
 
 declare global {
   namespace JSX {
-    interface Element {}
-    export interface IntrinsicElements {}
+    interface Element { }
+    export interface IntrinsicElements { }
   }
-  namespace JSXElements {}
+  namespace JSXElements { }
 
   interface HTMLElement {
     componentOnReady?: () => Promise<this | null>;
@@ -22,7 +22,7 @@ declare global {
     forceUpdate(): void;
   }
 
-  interface HTMLAttributes {}
+  interface HTMLAttributes { }
 }
 
 import {
@@ -37,6 +37,7 @@ declare global {
       'canAutoResize': boolean;
       'currentMatchIndex': number;
       'enableRotate': boolean;
+      'enableSearch': boolean;
       'enableSideDrawer': boolean;
       'externalLinkTarget': string;
       'fitToPage': boolean;
@@ -55,11 +56,11 @@ declare global {
     }
   }
 
-  interface HTMLHivePdfViewerElement extends StencilComponents.HivePdfViewer, HTMLStencilElement {}
+  interface HTMLHivePdfViewerElement extends StencilComponents.HivePdfViewer, HTMLStencilElement { }
 
   var HTMLHivePdfViewerElement: {
     prototype: HTMLHivePdfViewerElement;
-    new (): HTMLHivePdfViewerElement;
+    new(): HTMLHivePdfViewerElement;
   };
   interface HTMLElementTagNameMap {
     'hive-pdf-viewer': HTMLHivePdfViewerElement;
@@ -78,6 +79,7 @@ declare global {
       'canAutoResize'?: boolean;
       'currentMatchIndex'?: number;
       'enableRotate'?: boolean;
+      'enableSearch'?: boolean;
       'enableSideDrawer'?: boolean;
       'externalLinkTarget'?: string;
       'fitToPage'?: boolean;
@@ -102,6 +104,6 @@ declare global {
   }
 }
 
-declare global { namespace JSX { interface StencilJSX {} } }
+declare global { namespace JSX { interface StencilJSX { } } }
 
 export declare function defineCustomElements(window: any): void;
