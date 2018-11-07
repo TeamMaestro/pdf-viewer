@@ -50,6 +50,7 @@ import '@teamhive/stencil-pdf-viewer/dist/pdfviewer';
 |`searchOpen`|`false`|If the search pop-up panel should be displayed by default.|
 |`enableSideDrawer`|`true`|If the side drawer UI (and button) is available for display.|
 |`enableRotate`|`true`|If the document can be rotated. Hides the button when false.|
+|`enableSearch`|`true`|If the document can be searched through. Hides the button when false.|
 
 
 ### Events
