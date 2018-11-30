@@ -10,21 +10,24 @@
         "dist/"
     ],
     "scripts": {
-        "build": "npm run copyPdfWorker && stencil build",
+        "build": "npm run copyPdfWorker && stencil build --prod",
         "dev": "npm run copyPdfWorker && sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
         "serve": "stencil-dev-server",
         "start": "npm run dev",
         "test": "jest",
         "test.watch": "jest --watch",
-        "copyPdfWorker": "./copy-pdf-worker.sh"
+        "copyPdfWorker": "./copy-pdf-worker.sh",
+        "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "print-js": "^1.0.47"
+        "print-js": "^1.0.47",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0"
     },
     "devDependencies": {
-        "@stencil/core": "^0.10.8",
+        "@stencil/core": "^0.16.0",
         "@stencil/dev-server": "latest",
-        "@stencil/sass": "0.0.5",
+        "@stencil/sass": "^0.1.1",
         "@stencil/utils": "latest",
         "@types/jest": "^22.2.3",
         "@types/pdfjs-dist": "^0.1.2",
