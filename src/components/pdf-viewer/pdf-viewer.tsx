@@ -2,8 +2,6 @@ import { Component, Prop, Element } from '@stencil/core';
 import { Config } from './viewer-configuration';
 import { setViewerOptions } from './viewer-options';
 
-import pdfjsLib from 'pdfjs-dist/build/pdf.js';
-
 @Component({
     tag: 'hive-pdf-viewer',
     styleUrl: 'pdf-viewer.scss',
@@ -26,8 +24,8 @@ export class PdfViewer {
         return window['PDFViewerApplication'];
     }
 
-    loadPDFJSLib() {
-        this.PDFJSLib = pdfjsLib;
+    async loadPDFJSLib() {
+        this.PDFJSLib = (await import('pdfjs-dist/build/pdf.js')).default;
         this.PDFJSLib.GlobalWorkerOptions.workerSrc = `${this.resourcesUrl}pdfjs-worker/pdf.worker.min.js`;
     }
 
@@ -41,7 +39,7 @@ export class PdfViewer {
     }
 
     async componentWillLoad() {
-        this.loadPDFJSLib();
+        await this.loadPDFJSLib();
         await this.loadPDFJSViewer();
         // (window as any).PDFViewerApplication.open('https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf');
     }
