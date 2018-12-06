@@ -1,56 +1,34 @@
 {
-    "name": "@teamhive/stencil-pdf-viewer",
-    "version": "0.2.2",
-    "description": "Stencil PDF Viewer",
+    "name": "@teamhive/pdf-viewer",
+    "version": "1.0.0-alpha.0",
+    "description": "PDF Viewer Web Component. Built with stencil and pdfjs.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TeamHive/stencil-pdf-viewer.git"
+    },
+    "author": "TeamHive",
     "module": "dist/esm/index.js",
     "main": "dist/index.js",
+    "unpkg": "dist/ionic.js",
     "types": "dist/types/components.d.ts",
     "collection": "dist/collection/collection-manifest.json",
     "files": [
         "dist/"
     ],
     "scripts": {
-        "build": "npm run copyPdfWorker && stencil build --prod",
-        "dev": "npm run copyPdfWorker && sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
-        "serve": "stencil-dev-server",
-        "start": "npm run dev",
-        "test": "jest",
-        "test.watch": "jest --watch",
-        "copyPdfWorker": "./copy-pdf-worker.sh",
+        "build": "stencil build && node ./scripts/worker-import.js",
+        "start": "stencil build --dev --watch --serve",
         "prepublishOnly": "npm run build"
     },
-    "dependencies": {
-        "print-js": "^1.0.47",
-        "rollup-plugin-node-builtins": "^2.1.2",
-        "rollup-plugin-node-globals": "^1.4.0"
-    },
+    "dependencies": {},
     "devDependencies": {
-        "@stencil/core": "^0.16.0",
-        "@stencil/dev-server": "latest",
-        "@stencil/sass": "^0.1.1",
-        "@stencil/utils": "latest",
-        "@types/jest": "^22.2.3",
-        "@types/pdfjs-dist": "^0.1.2",
-        "jest": "^22.4.3",
-        "pdfjs-dist": "^2.0.489"
+        "@stencil/core": "0.16.0",
+        "@stencil/sass": "0.1.1",
+        "@types/pdfjs-dist": "0.1.2",
+        "pdfjs-dist": "2.0.943",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0",
+        "webpack": "^4.27.1"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/TeamHive/stencil-pdf-viewer.git"
-    },
-    "author": "TeamHive",
-    "license": "MIT",
-    "jest": {
-        "transform": {
-            "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
-        },
-        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-        "moduleFileExtensions": [
-            "ts",
-            "tsx",
-            "js",
-            "json",
-            "jsx"
-        ]
-    }
+    "license": "MIT"
 }
