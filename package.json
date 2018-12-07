@@ -1,6 +1,6 @@
 {
     "name": "@teamhive/pdf-viewer",
-    "version": "1.0.0-alpha.1",
+    "version": "1.0.0-alpha.2",
     "description": "PDF Viewer Web Component. Built with stencil and pdfjs.",
     "homepage": "https://github.com/TeamHive/pdf-viewer",
     "repository": {
