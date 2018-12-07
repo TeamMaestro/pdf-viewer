@@ -1844,7 +1844,7 @@ function webViewerPresentationMode() {
 }
 function webViewerOpenFile() {
   var openFileInputName = PDFViewerApplication.appConfig.openFileInputName;
-  appConfig.shadowRoot.getElementById(openFileInputName).click();
+  PDFViewerApplication.appConfig.shadowRoot.getElementById(openFileInputName).click();
 }
 function webViewerPrint() {
   window.print();
