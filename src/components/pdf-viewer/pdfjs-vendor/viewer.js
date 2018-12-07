@@ -1597,7 +1597,7 @@ function webViewerInitialized() {
   fileInput.className = 'fileInput';
   fileInput.setAttribute('type', 'file');
   fileInput.oncontextmenu = _ui_utils.noContextMenuHandler;
-  document.body.appendChild(fileInput);
+  appConfig.shadowRoot.appendChild(fileInput);
   if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
     appConfig.toolbar.openFile.setAttribute('hidden', 'true');
     appConfig.secondaryToolbar.openFileButton.setAttribute('hidden', 'true');
@@ -1844,7 +1844,7 @@ function webViewerPresentationMode() {
 }
 function webViewerOpenFile() {
   var openFileInputName = PDFViewerApplication.appConfig.openFileInputName;
-  document.getElementById(openFileInputName).click();
+  appConfig.shadowRoot.getElementById(openFileInputName).click();
 }
 function webViewerPrint() {
   window.print();
@@ -2119,7 +2119,7 @@ function webViewerKeyDown(evt) {
     evt.preventDefault();
     return;
   }
-  var curElement = document.activeElement || document.querySelector(':focus');
+  var curElement = PDFViewerApplication.appConfig.shadowRoot.activeElement || PDFViewerApplication.appConfig.shadowRoot.querySelector(':focus');
   var curElementTagName = curElement && curElement.tagName.toUpperCase();
   if (curElementTagName === 'INPUT' || curElementTagName === 'TEXTAREA' || curElementTagName === 'SELECT') {
     if (evt.keyCode !== 27) {
@@ -3416,7 +3416,7 @@ var ProgressBar = function () {
     _classCallCheck(this, ProgressBar);
 
     this.visible = true;
-    this.div = document.querySelector(id + ' .progress');
+    this.div = PDFViewerApplication.appConfig.shadowRoot.querySelector(id + ' .progress');
     this.bar = this.div.parentNode;
     this.height = height || 100;
     this.width = width || 100;
@@ -13308,7 +13308,7 @@ function abort() {
   }
 }
 function renderProgress(index, total, l10n) {
-  var progressContainer = document.getElementById('printServiceOverlay');
+  var progressContainer = PDFViewerApplication.appConfig.shadowRoot.getElementById('printServiceOverlay');
   var progress = Math.round(100 * index / total);
   var progressBar = progressContainer.querySelector('progress');
   var progressPerc = progressContainer.querySelector('.relative-progress');
@@ -13358,8 +13358,8 @@ function ensureOverlay() {
     if (!overlayManager) {
       throw new Error('The overlay manager has not yet been initialized.');
     }
-    overlayPromise = overlayManager.register('printServiceOverlay', document.getElementById('printServiceOverlay'), abort, true);
-    document.getElementById('printCancel').onclick = abort;
+    overlayPromise = overlayManager.register('printServiceOverlay', PDFViewerApplication.appConfig.shadowRoot.getElementById('printServiceOverlay'), abort, true);
+    PDFViewerApplication.appConfig.shadowRoot.getElementById('printCancel').onclick = abort;
   }
   return overlayPromise;
 }

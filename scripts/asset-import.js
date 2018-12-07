@@ -10,14 +10,14 @@ definePaths.forEach(function (path) {
             return console.error(err);
         }
 
-        data = data + "import '../../pdf-viewer/pdfjs-worker';"
+        data = data + "import '../../pdf-viewer/pdfjs-assets';"
 
         fs.writeFile(path, data, 'utf8', function (err) {
             if (err) {
                 return console.error(err);
             }
 
-            console.log(`Worker import added to ${path}`)
+            console.log(`Asset import added to ${path}`)
         })
     });
 })

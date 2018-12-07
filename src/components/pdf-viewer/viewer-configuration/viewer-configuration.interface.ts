@@ -1,4 +1,5 @@
 export interface ViewerConfiguration {
+    shadowRoot: ShadowRoot;
     appContainer: HTMLElement;
     mainContainer: HTMLElement;
     viewerContainer: HTMLElement;

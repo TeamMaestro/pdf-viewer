@@ -17,7 +17,7 @@
         "dist/"
     ],
     "scripts": {
-        "build": "stencil build && node ./scripts/worker-import.js",
+        "build": "stencil build && node ./scripts/asset-import.js",
         "start": "stencil build --dev --watch --serve",
         "prepublishOnly": "npm run build"
     },

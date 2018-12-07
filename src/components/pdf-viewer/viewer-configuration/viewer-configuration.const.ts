@@ -1,122 +1,129 @@
 import { ViewerConfiguration } from './viewer-configuration.interface';
 
-export const Config: ViewerConfiguration = {
-    appContainer: document.body,
-    mainContainer: document.getElementById('viewerContainer'),
-    viewerContainer: document.getElementById('viewer'),
-    eventBus: null,
-    toolbar: {
-        container: document.getElementById('toolbarViewer'),
-        numPages: document.getElementById('numPages'),
-        pageNumber: document.getElementById('pageNumber'),
-        scaleSelectContainer: document.getElementById('scaleSelectContainer'),
-        scaleSelect: document.getElementById('scaleSelect'),
-        customScaleOption: document.getElementById('customScaleOption'),
-        previous: document.getElementById('previous'),
-        next: document.getElementById('next'),
-        zoomIn: document.getElementById('zoomIn'),
-        zoomOut: document.getElementById('zoomOut'),
-        viewFind: document.getElementById('viewFind'),
-        openFile: document.getElementById('openFile'),
-        print: document.getElementById('print'),
-        presentationModeButton: document.getElementById('presentationMode'),
-        download: document.getElementById('download'),
-        viewBookmark: document.getElementById('viewBookmark')
-    },
-    secondaryToolbar: {
-        toolbar: document.getElementById('secondaryToolbar'),
-        toggleButton: document.getElementById('secondaryToolbarToggle'),
-        toolbarButtonContainer: document.getElementById('secondaryToolbarButtonContainer'),
-        presentationModeButton: document.getElementById('secondaryPresentationMode'),
-        openFileButton: document.getElementById('secondaryOpenFile'),
-        printButton: document.getElementById('secondaryPrint'),
-        downloadButton: document.getElementById('secondaryDownload'),
-        viewBookmarkButton: document.getElementById('secondaryViewBookmark'),
-        firstPageButton: document.getElementById('firstPage'),
-        lastPageButton: document.getElementById('lastPage'),
-        pageRotateCwButton: document.getElementById('pageRotateCw'),
-        pageRotateCcwButton: document.getElementById('pageRotateCcw'),
-        cursorSelectToolButton: document.getElementById('cursorSelectTool'),
-        cursorHandToolButton: document.getElementById('cursorHandTool'),
-        scrollVerticalButton: document.getElementById('scrollVertical'),
-        scrollHorizontalButton: document.getElementById('scrollHorizontal'),
-        scrollWrappedButton: document.getElementById('scrollWrapped'),
-        spreadNoneButton: document.getElementById('spreadNone'),
-        spreadOddButton: document.getElementById('spreadOdd'),
-        spreadEvenButton: document.getElementById('spreadEven'),
-        documentPropertiesButton: document.getElementById('documentProperties')
-    },
-    fullscreen: {
-        contextFirstPage: document.getElementById('contextFirstPage'),
-        contextLastPage: document.getElementById('contextLastPage'),
-        contextPageRotateCw: document.getElementById('contextPageRotateCw'),
-        contextPageRotateCcw: document.getElementById('contextPageRotateCcw')
-    },
-    sidebar: {
-        outerContainer: document.getElementById('outerContainer'),
-        viewerContainer: document.getElementById('viewerContainer'),
-        toggleButton: document.getElementById('sidebarToggle'),
-        thumbnailButton: document.getElementById('viewThumbnail'),
-        outlineButton: document.getElementById('viewOutline'),
-        attachmentsButton: document.getElementById('viewAttachments'),
-        thumbnailView: document.getElementById('thumbnailView'),
-        outlineView: document.getElementById('outlineView'),
-        attachmentsView: document.getElementById('attachmentsView')
-    },
-    sidebarResizer: {
-        outerContainer: document.getElementById('outerContainer'),
-        resizer: document.getElementById('sidebarResizer')
-    },
-    findBar: {
-        bar: document.getElementById('findbar'),
-        toggleButton: document.getElementById('viewFind'),
-        findField: document.getElementById('findInput'),
-        highlightAllCheckbox: document.getElementById('findHighlightAll'),
-        caseSensitiveCheckbox: document.getElementById('findMatchCase'),
-        entireWordCheckbox: document.getElementById('findEntireWord'),
-        findMsg: document.getElementById('findMsg'),
-        findResultsCount: document.getElementById('findResultsCount'),
-        findPreviousButton: document.getElementById('findPrevious'),
-        findNextButton: document.getElementById('findNext')
-    },
-    passwordOverlay: {
-        overlayName: 'passwordOverlay',
-        container: document.getElementById('passwordOverlay'),
-        label: document.getElementById('passwordText'),
-        input: document.getElementById('password'),
-        submitButton: document.getElementById('passwordSubmit'),
-        cancelButton: document.getElementById('passwordCancel')
-    },
-    documentProperties: {
-        overlayName: 'documentPropertiesOverlay',
-        container: document.getElementById('documentPropertiesOverlay'),
-        closeButton: document.getElementById('documentPropertiesClose'),
-        fields: {
-            'fileName': document.getElementById('fileNameField'),
-            'fileSize': document.getElementById('fileSizeField'),
-            'title': document.getElementById('titleField'),
-            'author': document.getElementById('authorField'),
-            'subject': document.getElementById('subjectField'),
-            'keywords': document.getElementById('keywordsField'),
-            'creationDate': document.getElementById('creationDateField'),
-            'modificationDate': document.getElementById('modificationDateField'),
-            'creator': document.getElementById('creatorField'),
-            'producer': document.getElementById('producerField'),
-            'version': document.getElementById('versionField'),
-            'pageCount': document.getElementById('pageCountField'),
-            'pageSize': document.getElementById('pageSizeField'),
-            'linearized': document.getElementById('linearizedField')
-        }
-    },
-    errorWrapper: {
-        container: document.getElementById('errorWrapper'),
-        errorMessage: document.getElementById('errorMessage'),
-        closeButton: document.getElementById('errorClose'),
-        errorMoreInfo: document.getElementById('errorMoreInfo'),
-        moreInfoButton: document.getElementById('errorShowMore'),
-        lessInfoButton: document.getElementById('errorShowLess')
-    },
-    printContainer: document.getElementById('printContainer'),
-    openFileInputName: 'fileInput',
-    debuggerScriptPath: './debugger.js'
+export const Config = (shadowRoot: ShadowRoot): ViewerConfiguration => {
+    function getElementById(selector: string) {
+        return shadowRoot.getElementById(selector);
+    }
+
+    return {
+        shadowRoot: shadowRoot,
+        appContainer: document.body,
+        mainContainer: getElementById('viewerContainer'),
+        viewerContainer: getElementById('viewer'),
+        eventBus: null,
+        toolbar: {
+            container: getElementById('toolbarViewer'),
+            numPages: getElementById('numPages'),
+            pageNumber: getElementById('pageNumber'),
+            scaleSelectContainer: getElementById('scaleSelectContainer'),
+            scaleSelect: getElementById('scaleSelect'),
+            customScaleOption: getElementById('customScaleOption'),
+            previous: getElementById('previous'),
+            next: getElementById('next'),
+            zoomIn: getElementById('zoomIn'),
+            zoomOut: getElementById('zoomOut'),
+            viewFind: getElementById('viewFind'),
+            openFile: getElementById('openFile'),
+            print: getElementById('print'),
+            presentationModeButton: getElementById('presentationMode'),
+            download: getElementById('download'),
+            viewBookmark: getElementById('viewBookmark')
+        },
+        secondaryToolbar: {
+            toolbar: getElementById('secondaryToolbar'),
+            toggleButton: getElementById('secondaryToolbarToggle'),
+            toolbarButtonContainer: getElementById('secondaryToolbarButtonContainer'),
+            presentationModeButton: getElementById('secondaryPresentationMode'),
+            openFileButton: getElementById('secondaryOpenFile'),
+            printButton: getElementById('secondaryPrint'),
+            downloadButton: getElementById('secondaryDownload'),
+            viewBookmarkButton: getElementById('secondaryViewBookmark'),
+            firstPageButton: getElementById('firstPage'),
+            lastPageButton: getElementById('lastPage'),
+            pageRotateCwButton: getElementById('pageRotateCw'),
+            pageRotateCcwButton: getElementById('pageRotateCcw'),
+            cursorSelectToolButton: getElementById('cursorSelectTool'),
+            cursorHandToolButton: getElementById('cursorHandTool'),
+            scrollVerticalButton: getElementById('scrollVertical'),
+            scrollHorizontalButton: getElementById('scrollHorizontal'),
+            scrollWrappedButton: getElementById('scrollWrapped'),
+            spreadNoneButton: getElementById('spreadNone'),
+            spreadOddButton: getElementById('spreadOdd'),
+            spreadEvenButton: getElementById('spreadEven'),
+            documentPropertiesButton: getElementById('documentProperties')
+        },
+        fullscreen: {
+            contextFirstPage: getElementById('contextFirstPage'),
+            contextLastPage: getElementById('contextLastPage'),
+            contextPageRotateCw: getElementById('contextPageRotateCw'),
+            contextPageRotateCcw: getElementById('contextPageRotateCcw')
+        },
+        sidebar: {
+            outerContainer: getElementById('outerContainer'),
+            viewerContainer: getElementById('viewerContainer'),
+            toggleButton: getElementById('sidebarToggle'),
+            thumbnailButton: getElementById('viewThumbnail'),
+            outlineButton: getElementById('viewOutline'),
+            attachmentsButton: getElementById('viewAttachments'),
+            thumbnailView: getElementById('thumbnailView'),
+            outlineView: getElementById('outlineView'),
+            attachmentsView: getElementById('attachmentsView')
+        },
+        sidebarResizer: {
+            outerContainer: getElementById('outerContainer'),
+            resizer: getElementById('sidebarResizer')
+        },
+        findBar: {
+            bar: getElementById('findbar'),
+            toggleButton: getElementById('viewFind'),
+            findField: getElementById('findInput'),
+            highlightAllCheckbox: getElementById('findHighlightAll'),
+            caseSensitiveCheckbox: getElementById('findMatchCase'),
+            entireWordCheckbox: getElementById('findEntireWord'),
+            findMsg: getElementById('findMsg'),
+            findResultsCount: getElementById('findResultsCount'),
+            findPreviousButton: getElementById('findPrevious'),
+            findNextButton: getElementById('findNext')
+        },
+        passwordOverlay: {
+            overlayName: 'passwordOverlay',
+            container: getElementById('passwordOverlay'),
+            label: getElementById('passwordText'),
+            input: getElementById('password'),
+            submitButton: getElementById('passwordSubmit'),
+            cancelButton: getElementById('passwordCancel')
+        },
+        documentProperties: {
+            overlayName: 'documentPropertiesOverlay',
+            container: getElementById('documentPropertiesOverlay'),
+            closeButton: getElementById('documentPropertiesClose'),
+            fields: {
+                'fileName': getElementById('fileNameField'),
+                'fileSize': getElementById('fileSizeField'),
+                'title': getElementById('titleField'),
+                'author': getElementById('authorField'),
+                'subject': getElementById('subjectField'),
+                'keywords': getElementById('keywordsField'),
+                'creationDate': getElementById('creationDateField'),
+                'modificationDate': getElementById('modificationDateField'),
+                'creator': getElementById('creatorField'),
+                'producer': getElementById('producerField'),
+                'version': getElementById('versionField'),
+                'pageCount': getElementById('pageCountField'),
+                'pageSize': getElementById('pageSizeField'),
+                'linearized': getElementById('linearizedField')
+            }
+        },
+        errorWrapper: {
+            container: getElementById('errorWrapper'),
+            errorMessage: getElementById('errorMessage'),
+            closeButton: getElementById('errorClose'),
+            errorMoreInfo: getElementById('errorMoreInfo'),
+            moreInfoButton: getElementById('errorShowMore'),
+            lessInfoButton: getElementById('errorShowLess')
+        },
+        printContainer: getElementById('printContainer'),
+        openFileInputName: 'fileInput',
+        debuggerScriptPath: './debugger.js'
+    }
 }
