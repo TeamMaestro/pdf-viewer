@@ -13,7 +13,9 @@ import '@stencil/core';
 export namespace Components {
 
   interface HivePdfViewer {}
-  interface HivePdfViewerAttributes extends StencilHTMLAttributes {}
+  interface HivePdfViewerAttributes extends StencilHTMLAttributes {
+    'onPageChange'?: (event: CustomEvent<number>) => void;
+  }
 }
 
 declare global {

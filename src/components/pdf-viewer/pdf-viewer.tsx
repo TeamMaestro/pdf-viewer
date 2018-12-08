@@ -1,4 +1,4 @@
-import { Component, Prop, Element } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter } from '@stencil/core';
 import { Config } from './viewer-configuration';
 import { setViewerOptions } from './viewer-options';
 
@@ -11,9 +11,15 @@ import { setViewerOptions } from './viewer-options';
 export class PdfViewer {
 
     @Element() element: HTMLElement;
+
     @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
     @Prop({ context: 'document' }) document: Document;
     @Prop({ context: 'window' }) window: Window | any;
+
+    @Event() pageChange: EventEmitter<number>;
+
+    viewerContainer: HTMLElement;
+    localeElement: HTMLLinkElement;
 
     get workerSrc() {
         return `${this.resourcesUrl}pdfjs-assets/pdf.worker.min.js`
@@ -40,12 +46,7 @@ export class PdfViewer {
     }
 
     async componentWillLoad() {
-        const localeScript = this.document.createElement('link');
-        localeScript.rel = 'resource';
-        localeScript.type = 'application/l10n';
-        localeScript.href = `${this.resourcesUrl}pdfjs-assets/locale.properties`;
-        this.document.documentElement.appendChild(localeScript);
-
+        this.addLocaleLink();
         await this.loadPDFJSLib();
         await this.loadPDFJSViewer();
     }
@@ -56,9 +57,49 @@ export class PdfViewer {
             workerSrc: this.workerSrc,
             defaultUrl: ''
         });
-        this.window.PDFViewerApplication.isViewerEmbedded = true;
+        this.PDFViewerApplication.isViewerEmbedded = true;
 
-        this.window.PDFViewerApplication.open('https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf');
+        this.addEventListeners();
+
+        this.PDFViewerApplication.open('https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf');
+    }
+
+    componentDidUnload() {
+        this.PDFViewerApplication.cleanup();
+        this.PDFViewerApplication.close();
+        if (this.PDFViewerApplication._boundEvents) {
+            this.PDFViewerApplication.unbindWindowEvents();
+        }
+        const bus = this.PDFViewerApplication.eventBus;
+        if (bus) {
+            this.PDFViewerApplication.unbindEvents();
+            for (const key in bus._listeners) {
+                if (bus._listeners[key]) {
+                    bus._listeners[key] = undefined;
+                }
+            }
+        }
+        this.PDFViewerApplication.eventBus = null;
+        this.PDFViewerApplication.PDFViewer = null;
+        this.window['PDFViewerApplication'] = null;
+        this.PDFJSLib = null;
+        this.localeElement.parentNode.removeChild(this.localeElement);
+    }
+
+    addLocaleLink() {
+        if (!this.document.documentElement.querySelector('link[type="application/l10n"]')) {
+            const localeScript = this.document.createElement('link');
+            localeScript.rel = 'resource';
+            localeScript.type = 'application/l10n';
+            localeScript.href = `${this.resourcesUrl}pdfjs-assets/locale.properties`;
+            this.localeElement = this.document.documentElement.appendChild(localeScript);
+        }
+    }
+
+    addEventListeners() {
+        this.viewerContainer.addEventListener('pagechange', (e: any) => {
+            this.pageChange.emit(e.pageNumber);
+        });
     }
 
     render() {
@@ -342,7 +383,7 @@ export class PdfViewer {
                         </menuitem>
                     </menu>
 
-                    <div id="viewerContainer" tabindex="0">
+                    <div ref={(el) => this.viewerContainer = el as HTMLElement} id="viewerContainer" tabindex="0">
                         <div id="viewer" class="pdfViewer"></div>
                     </div>
 
