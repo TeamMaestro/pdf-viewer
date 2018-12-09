@@ -33,7 +33,7 @@
     "devDependencies": {
         "@stencil/core": "0.16.0",
         "@stencil/sass": "0.1.1",
-        "pdfjs-dist": "file:pdf.js/build/dist/pdfjs-dist.tgz",
+        "pdfjs-dist": "file:pdf.js/build/dist/pdfjs-dist-2.0.943.tgz",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-globals": "^1.4.0",
         "webpack": "^4.27.1"
