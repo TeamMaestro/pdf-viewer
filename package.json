@@ -17,7 +17,7 @@
         "dist/"
     ],
     "scripts": {
-        "preinstall": "npm run pdf.js:install && npm run pdf.js:build && npm run prepare-assets",
+        "prepare": "npm run build",
         "build": "npm run pdf.js:build && npm i && npm run prepare-assets && npm run build:stencil",
         "build:stencil": "stencil build && node ./scripts/asset-import.js",
         "start": "stencil build --dev --watch --serve",
@@ -26,8 +26,7 @@
         "pdf.js:build": "npm run pdf.js:install && npm run pdf.js:build:viewer && npm run pdf.js:build:core && npm run pdf.js:pack",
         "pdf.js:build:viewer": "cd pdf.js && gulp generic",
         "pdf.js:build:core": "cd pdf.js && gulp dist-pre",
-        "pdf.js:pack": "cd pdf.js/build/dist && npm pack pdfjs-dist",
-        "prepublishOnly": "npm run build"
+        "pdf.js:pack": "cd pdf.js/build/dist && npm pack pdfjs-dist"
     },
     "dependencies": {},
     "devDependencies": {
