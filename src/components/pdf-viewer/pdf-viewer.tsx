@@ -36,15 +36,6 @@ export class PdfViewer {
         return this.window['PDFViewerApplication'];
     }
 
-    async loadPDFJSLib() {
-        this.PDFJSLib = (await import('pdfjs-dist/build/pdf.min.js')).default;
-        this.PDFJSLib.GlobalWorkerOptions.workerSrc = this.workerSrc;
-    }
-
-    async loadPDFJSViewer() {
-        await import('../../../pdf.js/build/generic/web/viewer.js');
-    }
-
     async componentWillLoad() {
         this.addLocaleLink();
         await this.loadPDFJSLib();
@@ -86,6 +77,15 @@ export class PdfViewer {
         this.localeElement.parentNode.removeChild(this.localeElement);
     }
 
+    async loadPDFJSLib() {
+        this.PDFJSLib = (await import('pdfjs-dist/build/pdf.min.js')).default;
+        this.PDFJSLib.GlobalWorkerOptions.workerSrc = this.workerSrc;
+    }
+
+    async loadPDFJSViewer() {
+        await import('../../../pdf.js/build/generic/web/viewer.js');
+    }
+
     addLocaleLink() {
         if (!this.document.documentElement.querySelector('link[type="application/l10n"]')) {
             const localeScript = this.document.createElement('link');
@@ -97,9 +97,11 @@ export class PdfViewer {
     }
 
     addEventListeners() {
-        this.viewerContainer.addEventListener('pagechange', (e: any) => {
-            this.pageChange.emit(e.pageNumber);
-        });
+        this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
+    }
+
+    handlePageChange(e) {
+        this.pageChange.emit(e.pageNumber);
     }
 
     render() {
