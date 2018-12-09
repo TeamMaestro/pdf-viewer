@@ -37,7 +37,7 @@ export class PdfViewer {
     }
 
     async loadPDFJSLib() {
-        this.PDFJSLib = (await import('pdfjs-dist/build/pdf.js')).default;
+        this.PDFJSLib = (await import('pdfjs-dist/build/pdf.min.js')).default;
         this.PDFJSLib.GlobalWorkerOptions.workerSrc = this.workerSrc;
     }
 

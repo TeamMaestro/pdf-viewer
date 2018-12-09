@@ -22,7 +22,7 @@
         "start": "npm run prepare-assets && stencil build --dev --watch --serve",
         "prepare-assets": "node ./scripts/prepare-assets.js",
         "pdf.js:install": "cd pdf.js && npm install",
-        "pdf.js:build": "cd pdf.js && gulp minified",
+        "pdf.js:build": "cd pdf.js && gulp generic",
         "pdf.js:dist": "cd pdf.js && gulp dist-pre",
         "pdf.js:pack": "cd pdf.js/build/dist && npm pack pdfjs-dist",
         "prepublishOnly": "npm run build"
