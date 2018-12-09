@@ -17,16 +17,21 @@
         "dist/"
     ],
     "scripts": {
-        "build": "stencil build && node ./scripts/asset-import.js",
-        "start": "stencil build --dev --watch --serve",
+        "preinstall": "npm run pdf.js:install && npm run pdf.js:dist && npm run pdf.js:pack",
+        "build": "npm run prepare-assets && stencil build && node ./scripts/asset-import.js",
+        "start": "npm run prepare-assets && stencil build --dev --watch --serve",
+        "prepare-assets": "node ./scripts/prepare-assets.js",
+        "pdf.js:install": "cd pdf.js && npm install",
+        "pdf.js:build": "cd pdf.js && gulp minified",
+        "pdf.js:dist": "cd pdf.js && gulp dist-pre",
+        "pdf.js:pack": "cd pdf.js/build/dist && npm pack pdfjs-dist",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {},
     "devDependencies": {
         "@stencil/core": "0.16.0",
         "@stencil/sass": "0.1.1",
-        "@types/pdfjs-dist": "0.1.2",
-        "pdfjs-dist": "2.0.943",
+        "pdfjs-dist": "file:pdf.js/build/dist/pdfjs-dist.tgz",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-globals": "^1.4.0",
         "webpack": "^4.27.1"

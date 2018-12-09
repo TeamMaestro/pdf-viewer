@@ -42,7 +42,7 @@ export class PdfViewer {
     }
 
     async loadPDFJSViewer() {
-        await import('./pdfjs-vendor/viewer.js');
+        await import('../../../pdf.js/build/generic/web/viewer.js');
     }
 
     async componentWillLoad() {
@@ -91,7 +91,7 @@ export class PdfViewer {
             const localeScript = this.document.createElement('link');
             localeScript.rel = 'resource';
             localeScript.type = 'application/l10n';
-            localeScript.href = `${this.resourcesUrl}pdfjs-assets/locale.properties`;
+            localeScript.href = `${this.resourcesUrl}pdfjs-assets/locale/locale.properties`;
             this.localeElement = this.document.documentElement.appendChild(localeScript);
         }
     }
