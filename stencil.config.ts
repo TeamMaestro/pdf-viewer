@@ -16,7 +16,7 @@ export const config: Config = {
     plugins: [
         sass(),
         builtins(),
-        globals(),
+        globals()
     ],
     nodeResolve: {
         preferBuiltins: true

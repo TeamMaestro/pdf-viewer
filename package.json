@@ -17,14 +17,14 @@
         "dist/"
     ],
     "scripts": {
-        "build": "npm run pdf.js:build && npm i && npm run prepare-assets && npm run build:stencil",
+        "build": "npm run pdf.js:build && npm run prepare-assets && npm run build:stencil",
         "build:stencil": "stencil build && node ./scripts/asset-import.js",
         "start": "stencil build --dev --watch --serve",
         "prepare-assets": "node ./scripts/prepare-assets.js",
         "pdf.js:install": "cd pdf.js && npm install",
         "pdf.js:build": "npm run pdf.js:install && npm run pdf.js:dist && npm run pdf.js:pack",
         "pdf.js:dist": "cd pdf.js && gulp dist-pre",
-        "pdf.js:pack": "cd pdf.js/build/dist && npm pack && cd ../../../ && node ./scripts/package-rename.js",
+        "pdf.js:pack": "node ./scripts/package-cleanup.js && cd pdf.js/build/dist && npm pack && cd ../../../ && node ./scripts/package-rename.js && npm i pdf.js/build/dist/pdfjs-dist.tgz --no-save",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {},
