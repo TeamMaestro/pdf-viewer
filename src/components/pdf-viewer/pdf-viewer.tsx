@@ -22,6 +22,12 @@ export class PdfViewer {
         this.openPDF();
     }
 
+    @Prop({mutable: true}) page: number = 1;
+    @Watch('page')
+    pageChanged(page) {
+        this.PDFViewerApplication.page = page;
+    }
+
     @Event() pageChange: EventEmitter<number>;
 
     viewerContainer: HTMLElement;
@@ -304,7 +310,7 @@ export class PdfViewer {
                                             <span data-l10n-id="next_label">Next</span>
                                         </button>
                                     </div>
-                                    <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1"
+                                    <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value={this.page}
                                         size={4} min="1" tabindex="15" data-l10n-id="page"/>
                                     <span id="numPages" class="toolbarLabel"></span>
                                 </div>
