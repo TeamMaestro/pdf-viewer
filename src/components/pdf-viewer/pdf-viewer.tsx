@@ -1,4 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/core';
 import { Config } from './viewer-configuration';
 import { setViewerOptions } from './viewer-options';
 
@@ -15,6 +15,12 @@ export class PdfViewer {
     @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
     @Prop({ context: 'document' }) document: Document;
     @Prop({ context: 'window' }) window: Window | any;
+
+    @Prop() src: string | Uint8Array;
+    @Watch('src')
+    srcChanged() {
+        this.openPDF();
+    }
 
     @Event() pageChange: EventEmitter<number>;
 
@@ -49,10 +55,8 @@ export class PdfViewer {
             defaultUrl: ''
         });
         this.PDFViewerApplication.isViewerEmbedded = true;
-
         this.addEventListeners();
-
-        this.PDFViewerApplication.open('https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf');
+        this.openPDF();
     }
 
     componentDidUnload() {
@@ -98,6 +102,12 @@ export class PdfViewer {
 
     addEventListeners() {
         this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
+    }
+
+    openPDF() {
+        if (this.src) {
+            this.PDFViewerApplication.open(this.src);
+        }
     }
 
     handlePageChange(e) {
