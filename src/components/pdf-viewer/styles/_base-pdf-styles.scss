@@ -13,6 +13,12 @@
  * limitations under the License.
  */
 
+:host {
+    --page-box-shadow: 3px 3px 20px rgba(0,0,0,.1);
+    --page-margin: 20px;
+    --page-border-radius: 6px;
+}
+
 .textLayer {
     position: absolute;
     left: 0;
@@ -276,14 +282,24 @@
     direction: ltr;
     width: 816px;
     height: 1056px;
-    margin: 1px auto -8px auto;
+    margin: var(--page-margin) auto;
     position: relative;
     overflow: visible;
-    border: 9px solid transparent;
     background-clip: content-box;
-    // -o-border-image: url(images/shadow.png) 9 9 repeat;
-    // border-image: url(images/shadow.png) 9 9 repeat;
     background-color: white;
+    box-shadow: var(--page-box-shadow);
+    border-radius: var(--page-border-radius);
+    overflow: hidden;
+    transform: translate3d(0, 100px, 0);
+    opacity: 0;
+    animation: expand .5s ease .5s forwards;
+}
+
+@keyframes expand {
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
 }
 
 .pdfViewer.removePageBorders .page {
