@@ -30,6 +30,9 @@ export class PdfViewer {
         this.PDFViewerApplication.page = page;
     }
 
+    @Prop() enableSearch: boolean = true;
+    @Prop() enableSideDrawer: boolean = true;
+
     @Event() pageChange: EventEmitter<number>;
     @Event() onLinkClick: EventEmitter<string>;
 
@@ -373,11 +376,11 @@ export class PdfViewer {
                         <div id="toolbarContainer">
                             <div id="toolbarViewer">
                                 <div id="toolbarViewerLeft">
-                                    <button id="sidebarToggle" class="toolbar-button" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar">
+                                    <button hidden={!this.enableSideDrawer} id="sidebarToggle" class="toolbar-button" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar">
                                         { Icons.Sidebar }
                                     </button>
 
-                                    <div class="separator"></div>
+                                    <div hidden={!this.enableSideDrawer} class="separator"></div>
 
                                     <div class="pager">
                                         <button class="toolbar-button prev" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
@@ -430,7 +433,7 @@ export class PdfViewer {
                                     </span>
                                 </div>
                                 <div id="toolbarViewerRight">
-                                    <button id="viewFind" class="toolbar-button" title="Find in Document" tabindex="12" data-l10n-id="findbar">
+                                    <button hidden={!this.enableSearch} id="viewFind" class="toolbar-button" title="Find in Document" tabindex="12" data-l10n-id="findbar">
                                         { Icons.Search }
                                     </button>
                                 </div>
