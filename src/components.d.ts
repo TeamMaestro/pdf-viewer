@@ -17,6 +17,7 @@ export namespace Components {
     'src': string | Uint8Array;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
+    'onOnLinkClick'?: (event: CustomEvent<string>) => void;
     'onPageChange'?: (event: CustomEvent<number>) => void;
     'page'?: number;
     'src'?: string | Uint8Array;

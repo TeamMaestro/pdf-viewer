@@ -1,6 +1,7 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch, State } from '@stencil/core';
 import { Config } from './viewer-configuration';
 import { setViewerOptions } from './viewer-options';
+import { Icons } from './icons';
 
 @Component({
     tag: 'hive-pdf-viewer',
@@ -25,13 +26,19 @@ export class PdfViewer {
     @Prop({mutable: true}) page: number = 1;
     @Watch('page')
     pageChanged(page) {
+        this.currentPage = page;
         this.PDFViewerApplication.page = page;
     }
 
     @Event() pageChange: EventEmitter<number>;
+    @Event() onLinkClick: EventEmitter<string>;
+
+    @State() currentPage: number = 1;
+    @State() scalePreset: 'page-fit' | 'page-width';
 
     viewerContainer: HTMLElement;
     localeElement: HTMLLinkElement;
+    fontFaceStyleElement: HTMLStyleElement;
 
     get workerSrc() {
         return `${this.resourcesUrl}pdfjs-assets/pdf.worker.min.js`
@@ -48,21 +55,26 @@ export class PdfViewer {
         return this.window['PDFViewerApplication'];
     }
 
-    async componentWillLoad() {
+    componentWillLoad() {
         this.addLocaleLink();
-        await this.loadPDFJSLib();
-        await this.loadPDFJSViewer();
+        this.addFontFaces();
     }
 
     componentDidLoad() {
-        this.window.webViewerLoad(Config(this.element.shadowRoot));
-        setViewerOptions({
-            workerSrc: this.workerSrc,
-            defaultUrl: ''
-        });
-        this.PDFViewerApplication.isViewerEmbedded = true;
-        this.addEventListeners();
-        this.openPDF();
+        setTimeout(async () => {
+            await this.loadPDFJSLib();
+            await this.loadPDFJSViewer();
+            if (this.window.webViewerLoad) {
+                this.loadWebViewer();
+            }
+            else {
+                setTimeout(async () => {
+                    await this.loadPDFJSLib();
+                    await this.loadPDFJSViewer();
+                    this.loadWebViewer();
+                })
+            }
+        })
     }
 
     componentDidUnload() {
@@ -85,6 +97,19 @@ export class PdfViewer {
         this.window['PDFViewerApplication'] = null;
         this.PDFJSLib = null;
         this.localeElement.parentNode.removeChild(this.localeElement);
+        this.fontFaceStyleElement.parentNode.removeChild(this.fontFaceStyleElement);
+    }
+
+    loadWebViewer() {
+        this.window.webViewerLoad(Config(this.element.shadowRoot));
+        setViewerOptions({
+            workerSrc: this.workerSrc,
+            defaultUrl: '',
+            enableWebGL: true
+        });
+        this.PDFViewerApplication.isViewerEmbedded = true;
+        this.addEventListeners();
+        this.openPDF();
     }
 
     async loadPDFJSLib() {
@@ -97,17 +122,53 @@ export class PdfViewer {
     }
 
     addLocaleLink() {
-        if (!this.document.documentElement.querySelector('link[type="application/l10n"]')) {
+        if (!this.document.head.querySelector('link[type="application/l10n"]')) {
             const localeScript = this.document.createElement('link');
             localeScript.rel = 'resource';
             localeScript.type = 'application/l10n';
             localeScript.href = `${this.resourcesUrl}pdfjs-assets/locale/locale.properties`;
-            this.localeElement = this.document.documentElement.appendChild(localeScript);
+            this.localeElement = this.document.head.appendChild(localeScript);
+        }
+    }
+
+    addFontFaces() {
+        if (!this.document.head.querySelector('#pdfViewerFontFaces')) {
+            const fontStyle = this.document.createElement('style');
+            fontStyle.id = 'pdfViewerFontFaces';
+            fontStyle.innerHTML = `
+                @font-face {
+                    font-family: 'PDFViewerCircular';
+                    src: url('${this.resourcesUrl}pdfjs-assets/fonts/CircularStd-Book.woff') format('woff');
+                    font-weight: 400;
+                }
+                @font-face {
+                    font-family: 'PDFViewerCircular';
+                    src: url('${this.resourcesUrl}pdfjs-assets/fonts/CircularStd-Medium.woff') format('woff');
+                    font-weight: 500;
+                }
+            `;
+            this.fontFaceStyleElement = this.document.head.appendChild(fontStyle);
         }
     }
 
     addEventListeners() {
         this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
+        this.viewerContainer.addEventListener('scalechange', this.handleScaleChange.bind(this));
+
+        this.element.shadowRoot
+            .querySelector('#viewerContainer')
+            .addEventListener('click', (e: any) => {
+                e.preventDefault();
+                const link = (e.target as any).closest('.linkAnnotation > a');
+                if (link) {
+                    const href = (e.target as any).closest('.linkAnnotation > a').href || '';
+                    // Ignore internal links to the same document
+                    if (href.indexOf(`${window.location.host}/#`) !== -1) {
+                        return;
+                    }
+                    this.onLinkClick.emit(href);
+                }
+        });
     }
 
     openPDF() {
@@ -117,7 +178,29 @@ export class PdfViewer {
     }
 
     handlePageChange(e) {
+        this.currentPage = e.pageNumber;
         this.pageChange.emit(e.pageNumber);
+    }
+
+    handleScaleChange(e) {
+        if (e.presetValue === 'page-fit') {
+            this.scalePreset = 'page-fit';
+        }
+        else if (e.presetValue === 'page-width') {
+            this.scalePreset = 'page-width';
+        }
+        else {
+            this.scalePreset = undefined;
+        }
+    }
+
+    pageScaleToggle() {
+        if (this.scalePreset === 'page-fit') {
+            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-width'
+        }
+        else {
+            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-fit'
+        }
     }
 
     render() {
@@ -125,7 +208,7 @@ export class PdfViewer {
             <div id="outerContainer">
 
                 <div id="sidebarContainer">
-                    <div id="toolbarSidebar">
+                    <div id="toolbarSidebar" class="hidden">
                         <div class="splitToolbarButton toggled">
                             <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2"
                                 data-l10n-id="thumbs">
@@ -153,7 +236,7 @@ export class PdfViewer {
                 </div>
 
                 <div id="mainContainer">
-                    <div class="findbar hidden doorHanger" id="findbar">
+                    <div class="findbar hidden" id="findbar">
                         <div id="findbarInputContainer">
                             <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91"
                                 data-l10n-id="find_input"/>
@@ -170,20 +253,20 @@ export class PdfViewer {
                             </div>
                         </div>
 
-                        <div id="findbarOptionsOneContainer">
+                        <div hidden id="findbarOptionsOneContainer">
                             <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94"/>
                             <label htmlFor="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">Highlight all</label>
                             <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95"/>
                             <label htmlFor="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">Match case</label>
                         </div>
-                        <div id="findbarOptionsTwoContainer">
+                        <div hidden id="findbarOptionsTwoContainer">
                             <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96"/>
                             <label htmlFor="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole words</label>
-                            <span id="findResultsCount" class="toolbarLabel hidden"></span>
                         </div>
 
                         <div id="findbarMessageContainer">
                             <span id="findMsg" class="toolbarLabel"></span>
+                            <span id="findResultsCount" class="toolbarLabel hidden"></span>
                         </div>
                     </div>
 
@@ -290,31 +373,69 @@ export class PdfViewer {
                         <div id="toolbarContainer">
                             <div id="toolbarViewer">
                                 <div id="toolbarViewerLeft">
-                                    <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11"
-                                        data-l10n-id="toggle_sidebar">
-                                        <span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
+                                    <button id="sidebarToggle" class="toolbar-button" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar">
+                                        { Icons.Sidebar }
                                     </button>
-                                    <div class="toolbarButtonSpacer"></div>
-                                    <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12"
-                                        data-l10n-id="findbar">
-                                        <span data-l10n-id="findbar_label">Find</span>
-                                    </button>
-                                    <div class="splitToolbarButton hiddenSmallView">
-                                        <button class="toolbarButton pageUp" title="Previous Page" id="previous" tabindex="13"
-                                            data-l10n-id="previous">
-                                            <span data-l10n-id="previous_label">Previous</span>
+
+                                    <div class="separator"></div>
+
+                                    <div class="pager">
+                                        <button class="toolbar-button prev" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
+                                            { Icons.Arrow }
                                         </button>
-                                        <div class="splitToolbarButtonSeparator"></div>
-                                        <button class="toolbarButton pageDown" title="Next Page" id="next" tabindex="14"
-                                            data-l10n-id="next">
-                                            <span data-l10n-id="next_label">Next</span>
+                                        <input type="number" id="pageNumber" title="Page" value={this.currentPage}
+                                            size={4} min="1" tabindex="15" data-l10n-id="page"/>
+                                        <span id="numPages"></span>
+                                        <button class="toolbar-button next" title="Next Page" id="next" tabindex="14" data-l10n-id="next">
+                                            { Icons.Arrow }
                                         </button>
                                     </div>
-                                    <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value={this.page}
-                                        size={4} min="1" tabindex="15" data-l10n-id="page"/>
-                                    <span id="numPages" class="toolbarLabel"></span>
+
+                                    <div class="separator"></div>
+
+                                    <button id="zoomOut" class="toolbar-button" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
+                                        { Icons.ZoomOut }
+                                    </button>
+                                    <button id="zoomIn" class="toolbar-button" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
+                                        { Icons.ZoomIn }
+                                    </button>
+
+                                    <div class="separator"></div>
+
+                                    <button class="toolbar-button" onClick={ () => this.pageScaleToggle()}>
+                                        { this.scalePreset === 'page-fit' ? Icons.FitWidth : Icons.FitPage }
+                                    </button>
+                                </div>
+                                <div id="toolbarViewerMiddle" class="hidden">
+                                    <span id="scaleSelectContainer" class="dropdownToolbarButton">
+                                        <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
+                                            <option id="pageAutoOption" title="" value="auto" selected data-l10n-id="page_scale_auto">Automatic
+                                                Zoom</option>
+                                            <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual
+                                                Size</option>
+                                            <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page
+                                                Fit</option>
+                                            <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page
+                                                Width</option>
+                                            <option id="customScaleOption" title="" value="custom" disabled hidden></option>
+                                            <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
+                                            <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
+                                            <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
+                                            <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
+                                            <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
+                                            <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
+                                            <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
+                                            <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
+                                        </select>
+                                    </span>
                                 </div>
                                 <div id="toolbarViewerRight">
+                                    <button id="viewFind" class="toolbar-button" title="Find in Document" tabindex="12" data-l10n-id="findbar">
+                                        { Icons.Search }
+                                    </button>
+                                </div>
+
+                                <div class="hidden">
                                     <button id="presentationMode" class="toolbarButton presentationMode hiddenLargeView" title="Switch to Presentation Mode"
                                         tabindex="31" data-l10n-id="presentation_mode">
                                         <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
@@ -339,46 +460,10 @@ export class PdfViewer {
                                         <span data-l10n-id="bookmark_label">Current View</span>
                                     </a>
 
-                                    <div class="verticalToolbarSeparator hiddenSmallView"></div>
-
                                     <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36"
                                         data-l10n-id="tools">
                                         <span data-l10n-id="tools_label">Tools</span>
                                     </button>
-                                </div>
-                                <div id="toolbarViewerMiddle">
-                                    <div class="splitToolbarButton">
-                                        <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="21"
-                                            data-l10n-id="zoom_out">
-                                            <span data-l10n-id="zoom_out_label">Zoom Out</span>
-                                        </button>
-                                        <div class="splitToolbarButtonSeparator"></div>
-                                        <button id="zoomIn" class="toolbarButton zoomIn" title="Zoom In" tabindex="22"
-                                            data-l10n-id="zoom_in">
-                                            <span data-l10n-id="zoom_in_label">Zoom In</span>
-                                        </button>
-                                    </div>
-                                    <span id="scaleSelectContainer" class="dropdownToolbarButton">
-                                        <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
-                                            <option id="pageAutoOption" title="" value="auto" selected data-l10n-id="page_scale_auto">Automatic
-                                                Zoom</option>
-                                            <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual
-                                                Size</option>
-                                            <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page
-                                                Fit</option>
-                                            <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page
-                                                Width</option>
-                                            <option id="customScaleOption" title="" value="custom" disabled hidden></option>
-                                            <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
-                                            <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
-                                            <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
-                                            <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
-                                            <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
-                                            <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
-                                            <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
-                                            <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
-                                        </select>
-                                    </span>
                                 </div>
                             </div>
                             <div id="loadingBar">
