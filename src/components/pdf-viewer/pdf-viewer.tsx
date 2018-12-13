@@ -23,7 +23,7 @@ export class PdfViewer {
         this.openPDF();
     }
 
-    @Prop({mutable: true}) page: number = 1;
+    @Prop({ mutable: true }) page: number = 1;
     @Watch('page')
     pageChanged(page) {
         this.currentPage = page;
@@ -180,7 +180,7 @@ export class PdfViewer {
             if (e.touches.length > 1 && (e.target || e.srcElement) === this.element) {
                 e.preventDefault();
             }
-        }, { passive:false });
+        }, { passive: false });
     }
 
     openPDF() {
@@ -249,12 +249,12 @@ export class PdfViewer {
 
                 <div id="mainContainer">
                     <div class="findbar hidden" id="findbar">
-                        <input id="findInput" class="search-input" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input"/>
+                        <input id="findInput" class="search-input" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input" />
                         <button id="findPrevious" class="toolbar-button findPrevious" title="Find the previous occurrence of the phrase" tabindex="92" data-l10n-id="find_previous">
-                            { Icons.Arrow }
+                            {Icons.Arrow}
                         </button>
                         <button id="findNext" class="toolbar-button findNext" title="Find the next occurrence of the phrase" tabindex="93" data-l10n-id="find_next">
-                            { Icons.Arrow }
+                            {Icons.Arrow}
                         </button>
                         <div class="search-meta">
                             <span id="findResultsCount" class="meta-label hidden"></span>
@@ -262,13 +262,13 @@ export class PdfViewer {
                         </div>
 
                         <div hidden id="findbarOptionsOneContainer">
-                            <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94"/>
+                            <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94" />
                             <label htmlFor="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">Highlight all</label>
-                            <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95"/>
+                            <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95" />
                             <label htmlFor="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">Match case</label>
                         </div>
                         <div hidden id="findbarOptionsTwoContainer">
-                            <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96"/>
+                            <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96" />
                             <label htmlFor="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole words</label>
                         </div>
                     </div>
@@ -377,36 +377,36 @@ export class PdfViewer {
                             <div id="toolbarViewer">
                                 <div id="toolbarViewerLeft">
                                     <button hidden={!this.enableSideDrawer} id="sidebarToggle" class="toolbar-button" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar">
-                                        { Icons.Sidebar }
+                                        {Icons.Sidebar}
                                     </button>
 
                                     <div hidden={!this.enableSideDrawer} class="separator"></div>
 
                                     <div class="pager">
                                         <button class="toolbar-button prev" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
-                                            { Icons.Arrow }
+                                            {Icons.Arrow}
                                         </button>
                                         <input type="number" id="pageNumber" title="Page" value={this.currentPage}
-                                            size={4} min="1" tabindex="15" data-l10n-id="page"/>
+                                            size={4} min="1" tabindex="15" data-l10n-id="page" />
                                         <span id="numPages"></span>
                                         <button class="toolbar-button next" title="Next Page" id="next" tabindex="14" data-l10n-id="next">
-                                            { Icons.Arrow }
+                                            {Icons.Arrow}
                                         </button>
                                     </div>
 
                                     <div class="separator"></div>
 
                                     <button id="zoomOut" class="toolbar-button" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
-                                        { Icons.ZoomOut }
+                                        {Icons.ZoomOut}
                                     </button>
                                     <button id="zoomIn" class="toolbar-button" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
-                                        { Icons.ZoomIn }
+                                        {Icons.ZoomIn}
                                     </button>
 
                                     <div class="separator"></div>
 
-                                    <button class="toolbar-button" onClick={ () => this.pageScaleToggle()}>
-                                        { this.scalePreset === 'page-fit' ? Icons.FitWidth : Icons.FitPage }
+                                    <button class="toolbar-button" onClick={() => this.pageScaleToggle()}>
+                                        {this.scalePreset === 'page-fit' ? Icons.FitWidth : Icons.FitPage}
                                     </button>
                                 </div>
                                 <div id="toolbarViewerMiddle" class="hidden">
@@ -434,7 +434,7 @@ export class PdfViewer {
                                 </div>
                                 <div id="toolbarViewerRight">
                                     <button hidden={!this.enableSearch} id="viewFind" class="toolbar-button" title="Find in Document" tabindex="12" data-l10n-id="findbar">
-                                        { Icons.Search }
+                                        {Icons.Search}
                                     </button>
                                 </div>
 
@@ -520,7 +520,7 @@ export class PdfViewer {
                                 <p id="passwordText" data-l10n-id="password_label">Enter the password to open this PDF file:</p>
                             </div>
                             <div class="row">
-                                <input type="password" id="password" class="toolbarField"/>
+                                <input type="password" id="password" class="toolbarField" />
                             </div>
                             <div class="buttonRow">
                                 <button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
