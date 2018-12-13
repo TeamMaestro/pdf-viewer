@@ -2,12 +2,45 @@
 
 # Hive PDF Viewer
 
-### _Currently in alpha and not production ready_
-
 This web component allows you to add PDF rendering support to your web applications.
 
+## Features
+- Rendering PDFs on web (Angular, Ionic, React, Stencil, etc.)
+- Search
+- Fit to Page / Fit to Width
+- Side panel for quick thumbnail navigation
 
+## Installation
+- `npm i @teamhive/pdf-viewer`
 
+## Usage
+```
+<hive-pdf-viewer src="http://www.mydomain.com/example.pdf"></hive-pdf-viewer>
+```
+
+Somewhere in your project (e.g. `main.ts`):
+```
+import { defineCustomElements } from '@teamhive/pdf-viewer/dist/loader';
+defineCustomElements(window);
+```
+
+Follow the [Stencil JS Framework Integration](https://stenciljs.com/docs/overview) guide for more info.
+
+## Properties
+|Property|Default|Description
+:---:|:---:|:---:
+|`src`||The PDF web address location (file://, http, https)|
+|`page`|`1`|The default page index.|
+|`enableSideDrawer`|`true`|If the side drawer UI (and button) is available for display.|
+|`enableSearch`|`true`|If the document can be searched through. Hides the button when false.|
+
+### Events
+|Event|Description|
+:---:|:---:
+|`onLinkClick(href: string)`|Emits the `href` clicked when it's not an internal document annotation.|
+|`pageChange(currentPage: number)`|Emits the current page number when the current page changes.|
+
+---
 
 ## Contributors
 
