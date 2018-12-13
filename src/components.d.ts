@@ -8,61 +8,23 @@
 import '@stencil/core';
 
 
-import {
-  PDFSource,
-} from 'pdfjs-dist';
 
 
 export namespace Components {
 
   interface HivePdfViewer {
-    'allowPrint': boolean;
-    'canAutoResize': boolean;
-    'currentMatchIndex': number;
-    'enableRotate': boolean;
     'enableSearch': boolean;
     'enableSideDrawer': boolean;
-    'externalLinkTarget': string;
-    'fitToPage': boolean;
-    'maxZoom': number;
-    'minZoom': number;
-    'openDrawer': boolean;
-    'originalSize': boolean;
     'page': number;
-    'renderText': boolean;
-    'rotation': number;
-    'searchOpen': boolean;
-    'src': string | Uint8Array | PDFSource;
-    'stickToPage': boolean;
-    'totalMatchCount': number;
-    'zoom': number;
+    'src': string | Uint8Array;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
-    'allowPrint'?: boolean;
-    'canAutoResize'?: boolean;
-    'currentMatchIndex'?: number;
-    'enableRotate'?: boolean;
     'enableSearch'?: boolean;
     'enableSideDrawer'?: boolean;
-    'externalLinkTarget'?: string;
-    'fitToPage'?: boolean;
-    'maxZoom'?: number;
-    'minZoom'?: number;
-    'onAfterLoadComplete'?: (event: CustomEvent) => void;
-    'onOnError'?: (event: CustomEvent) => void;
-    'onOnLinkClick'?: (event: CustomEvent) => void;
-    'onOnProgress'?: (event: CustomEvent) => void;
-    'onPageChange'?: (event: CustomEvent) => void;
-    'openDrawer'?: boolean;
-    'originalSize'?: boolean;
+    'onOnLinkClick'?: (event: CustomEvent<string>) => void;
+    'onPageChange'?: (event: CustomEvent<number>) => void;
     'page'?: number;
-    'renderText'?: boolean;
-    'rotation'?: number;
-    'searchOpen'?: boolean;
-    'src'?: string | Uint8Array | PDFSource;
-    'stickToPage'?: boolean;
-    'totalMatchCount'?: number;
-    'zoom'?: number;
+    'src'?: string | Uint8Array;
   }
 }
 
