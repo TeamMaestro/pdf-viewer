@@ -43,6 +43,8 @@ export class PdfViewer {
     localeElement: HTMLLinkElement;
     fontFaceStyleElement: HTMLStyleElement;
 
+    documentZoomPrevention: any;
+
     get workerSrc() {
         return `${this.resourcesUrl}pdfjs-assets/pdf.worker.min.js`
     }
@@ -86,6 +88,7 @@ export class PdfViewer {
     }
 
     componentDidUnload() {
+        this.document.removeEventListener('touchstart', this.documentZoomPrevention);
         this.PDFViewerApplication.cleanup();
         this.PDFViewerApplication.close();
         if (this.PDFViewerApplication._boundEvents) {
@@ -172,6 +175,12 @@ export class PdfViewer {
                 this.onLinkClick.emit(href);
             }
         });
+
+        this.document.addEventListener('touchstart', this.documentZoomPrevention = (e) => {
+            if (e.touches.length > 1 && (e.target || e.srcElement) === this.element) {
+                e.preventDefault();
+            }
+        }, { passive:false });
     }
 
     openPDF() {
