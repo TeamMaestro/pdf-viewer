@@ -64,20 +64,25 @@ export class PdfViewer {
     }
 
     componentDidLoad() {
-        setTimeout(async () => {
-            await this.loadPDFJSLib();
-            await this.loadPDFJSViewer();
-            if (this.window.webViewerLoad) {
-                this.loadWebViewer();
-            }
-            else {
-                setTimeout(async () => {
-                    await this.loadPDFJSLib();
-                    await this.loadPDFJSViewer();
+        if (this.PDFViewerApplication && this.PDFJSLib && this.window.webViewerLoad) {
+            this.loadWebViewer();
+        }
+        else {
+            setTimeout(async () => {
+                await this.loadPDFJSLib();
+                await this.loadPDFJSViewer();
+                if (this.window.webViewerLoad) {
                     this.loadWebViewer();
-                })
-            }
-        })
+                }
+                else {
+                    setTimeout(async () => {
+                        await this.loadPDFJSLib();
+                        await this.loadPDFJSViewer();
+                        this.loadWebViewer();
+                    })
+                }
+            })
+        }
     }
 
     componentDidUnload() {
@@ -96,9 +101,6 @@ export class PdfViewer {
             }
         }
         this.PDFViewerApplication.eventBus = null;
-        this.PDFViewerApplication.PDFViewer = null;
-        this.window['PDFViewerApplication'] = null;
-        this.PDFJSLib = null;
         this.localeElement.parentNode.removeChild(this.localeElement);
         this.fontFaceStyleElement.parentNode.removeChild(this.fontFaceStyleElement);
     }
@@ -158,19 +160,17 @@ export class PdfViewer {
         this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
         this.viewerContainer.addEventListener('scalechange', this.handleScaleChange.bind(this));
 
-        this.element.shadowRoot
-            .querySelector('#viewerContainer')
-            .addEventListener('click', (e: any) => {
-                e.preventDefault();
-                const link = (e.target as any).closest('.linkAnnotation > a');
-                if (link) {
-                    const href = (e.target as any).closest('.linkAnnotation > a').href || '';
-                    // Ignore internal links to the same document
-                    if (href.indexOf(`${window.location.host}/#`) !== -1) {
-                        return;
-                    }
-                    this.onLinkClick.emit(href);
+        this.viewerContainer.addEventListener('click', (e: any) => {
+            e.preventDefault();
+            const link = (e.target as any).closest('.linkAnnotation > a');
+            if (link) {
+                const href = (e.target as any).closest('.linkAnnotation > a').href || '';
+                // Ignore internal links to the same document
+                if (href.indexOf(`${window.location.host}/#`) !== -1) {
+                    return;
                 }
+                this.onLinkClick.emit(href);
+            }
         });
     }
 
@@ -199,10 +199,10 @@ export class PdfViewer {
 
     pageScaleToggle() {
         if (this.scalePreset === 'page-fit') {
-            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-width'
+            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-width';
         }
         else {
-            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-fit'
+            this.PDFViewerApplication.pdfViewer.currentScaleValue = 'page-fit';
         }
     }
 
