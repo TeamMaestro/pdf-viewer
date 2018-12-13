@@ -1,6 +1,6 @@
 {
     "name": "@teamhive/pdf-viewer",
-    "version": "1.0.0-alpha.7",
+    "version": "1.0.0-alpha.8",
     "description": "PDF Viewer Web Component. Built with stencil and pdfjs.",
     "homepage": "https://github.com/TeamHive/pdf-viewer",
     "repository": {
@@ -30,7 +30,7 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@stencil/core": "0.16.0",
+        "@stencil/core": "0.16.1",
         "@stencil/sass": "0.1.1",
         "rollup-plugin-node-builtins": "^2.1.2",
         "rollup-plugin-node-globals": "^1.4.0",
