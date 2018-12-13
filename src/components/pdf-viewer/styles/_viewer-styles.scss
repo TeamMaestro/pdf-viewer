@@ -351,7 +351,7 @@ select {
 }
 
 .findbar {
-    top: calc(var(--toolbar-height) + 1px);
+    top: calc(var(--toolbar-height) + 10px);
     position: absolute;
     z-index: 10000;
     height: var(--toolbar-height);
@@ -360,8 +360,14 @@ select {
     line-height: 14px;
     text-align: left;
     cursor: default;
-    right: 0;
+    right: 10px;
     width: 400px;
+    box-shadow: 0 0 10px 0 rgba(black, .2);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    color: var(--icon-color);
 }
 
 .findbar label {
@@ -372,11 +378,11 @@ select {
 }
 
 #findInput {
-    width: 200px;
+    width: 100%;
 }
 
 #findInput::-webkit-input-placeholder {
-    color: black;
+    color: rgba(#9D9D9D, .5);
 }
 
 #findInput:-ms-input-placeholder {
@@ -469,24 +475,24 @@ select {
     margin-right: -9px;
 }
 
-#findResultsCount {
-    background-color: hsl(0, 0%, 85%);
-    color: hsl(0, 0%, 32%);
-    text-align: center;
-    padding: 3px 4px;
-}
+// #findResultsCount {
+//     background-color: hsl(0, 0%, 85%);
+//     color: hsl(0, 0%, 32%);
+//     text-align: center;
+//     padding: 3px 4px;
+// }
 
-#findMsg {
-    font-style: italic;
-    color: #a6b7d0;
-}
+// #findMsg {
+//     font-style: italic;
+//     color: #a6b7d0;
+// }
 
 #findMsg:empty {
     display: none;
 }
 
 #findInput.notFound {
-    background-color: rgb(255, 102, 102);
+    border-color: rgb(255, 102, 102);
 }
 
 #toolbarViewerLeft,
@@ -735,12 +741,20 @@ select {
     height: 1px;
 }
 
+#findPrevious, #findNext {
+    flex-shrink: 0;
+}
+
 #findPrevious {
-    margin-left: 3px;
+    svg {
+        transform: rotate(-90deg);
+    }
 }
 
 #findNext {
-    margin-right: 3px;
+    svg {
+        transform: rotate(90deg);
+    }
 }
 
 .toolbarButton::before,
@@ -1758,7 +1772,16 @@ screen and (min-resolution: 2dppx) {
         width: 0;
     }
     .findbar {
-        left: 38px;
+        left: 0;
+        width: 100%;
+        top: var(--toolbar-height);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        .search-meta {
+            left: 10px;
+            padding-top: 5px;
+        }
     }
 }
 

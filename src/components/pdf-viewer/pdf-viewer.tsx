@@ -240,20 +240,16 @@ export class PdfViewer {
 
                 <div id="mainContainer">
                     <div class="findbar hidden" id="findbar">
-                        <div id="findbarInputContainer">
-                            <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91"
-                                data-l10n-id="find_input"/>
-                            <div class="splitToolbarButton">
-                                <button id="findPrevious" class="toolbarButton findPrevious" title="Find the previous occurrence of the phrase"
-                                    tabindex="92" data-l10n-id="find_previous">
-                                    <span data-l10n-id="find_previous_label">Previous</span>
-                                </button>
-                                <div class="splitToolbarButtonSeparator"></div>
-                                <button id="findNext" class="toolbarButton findNext" title="Find the next occurrence of the phrase"
-                                    tabindex="93" data-l10n-id="find_next">
-                                    <span data-l10n-id="find_next_label">Next</span>
-                                </button>
-                            </div>
+                        <input id="findInput" class="search-input" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input"/>
+                        <button id="findPrevious" class="toolbar-button findPrevious" title="Find the previous occurrence of the phrase" tabindex="92" data-l10n-id="find_previous">
+                            { Icons.Arrow }
+                        </button>
+                        <button id="findNext" class="toolbar-button findNext" title="Find the next occurrence of the phrase" tabindex="93" data-l10n-id="find_next">
+                            { Icons.Arrow }
+                        </button>
+                        <div class="search-meta">
+                            <span id="findResultsCount" class="meta-label hidden"></span>
+                            <span id="findMsg" class="meta-label"></span>
                         </div>
 
                         <div hidden id="findbarOptionsOneContainer">
@@ -265,11 +261,6 @@ export class PdfViewer {
                         <div hidden id="findbarOptionsTwoContainer">
                             <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96"/>
                             <label htmlFor="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole words</label>
-                        </div>
-
-                        <div id="findbarMessageContainer">
-                            <span id="findMsg" class="toolbarLabel"></span>
-                            <span id="findResultsCount" class="toolbarLabel hidden"></span>
                         </div>
                     </div>
 

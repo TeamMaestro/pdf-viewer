@@ -86,6 +86,33 @@
     }
 }
 
+.search-input {
+    border: none;
+    outline: none;
+    background: none;
+    font-family: var(--font-family);
+    color: var(--icon-color);
+    height: 25px;
+    padding: 0 15px;
+}
+
+.search-meta {
+    position: absolute;
+    top: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .meta-label {
+        display: block;
+        background: var(--accent-color);
+        color: var(--background-color);
+        margin-top: 5px;
+        padding: 5px 15px;
+        border-radius: 999px;
+        box-shadow: 0 0 10px 0 rgba(black, .2);
+    }
+}
+
 .separator {
     width: 1px;
     height: 100%;
