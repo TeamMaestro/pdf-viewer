@@ -89,21 +89,23 @@ export class PdfViewer {
 
     componentDidUnload() {
         this.document.removeEventListener('touchstart', this.documentZoomPrevention);
-        this.PDFViewerApplication.cleanup();
-        this.PDFViewerApplication.close();
-        if (this.PDFViewerApplication._boundEvents) {
-            this.PDFViewerApplication.unbindWindowEvents();
-        }
-        const bus = this.PDFViewerApplication.eventBus;
-        if (bus) {
-            this.PDFViewerApplication.unbindEvents();
-            for (const key in bus._listeners) {
-                if (bus._listeners[key]) {
-                    bus._listeners[key] = undefined;
+        if (this.PDFViewerApplication) {
+            this.PDFViewerApplication.cleanup();
+            this.PDFViewerApplication.close();
+            if (this.PDFViewerApplication._boundEvents) {
+                this.PDFViewerApplication.unbindWindowEvents();
+            }
+            const bus = this.PDFViewerApplication.eventBus;
+            if (bus) {
+                this.PDFViewerApplication.unbindEvents();
+                for (const key in bus._listeners) {
+                    if (bus._listeners[key]) {
+                        bus._listeners[key] = undefined;
+                    }
                 }
             }
+            this.PDFViewerApplication.eventBus = null;
         }
-        this.PDFViewerApplication.eventBus = null;
         this.localeElement.parentNode.removeChild(this.localeElement);
         this.fontFaceStyleElement.parentNode.removeChild(this.fontFaceStyleElement);
     }
