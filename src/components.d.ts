@@ -13,18 +13,10 @@ import '@stencil/core';
 export namespace Components {
 
   interface HivePdfViewer {
-    'enableSearch': boolean;
-    'enableSideDrawer': boolean;
-    'page': number;
-    'src': string | Uint8Array;
+    'fileSrc': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
-    'enableSearch'?: boolean;
-    'enableSideDrawer'?: boolean;
-    'onOnLinkClick'?: (event: CustomEvent<string>) => void;
-    'onPageChange'?: (event: CustomEvent<number>) => void;
-    'page'?: number;
-    'src'?: string | Uint8Array;
+    'fileSrc'?: string;
   }
 }
 
