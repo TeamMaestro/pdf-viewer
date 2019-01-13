@@ -3,6 +3,13 @@ import { Config } from './viewer-configuration';
 import { setViewerOptions } from './viewer-options';
 import { Icons } from './icons';
 
+interface MessageEvent {
+    data: {
+        type: string;
+        value: any;
+    }
+}
+
 @Component({
     tag: 'hive-pdf-viewer',
     styleUrl: 'pdf-viewer.scss',
@@ -11,18 +18,41 @@ import { Icons } from './icons';
 })
 export class PdfViewer {
 
-    @Prop({
-        attr: 'src'
-    }) fileSrc: string;
-
     @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
+    @Prop({ context: 'window' }) window: Window;
 
-    get src() {
-        return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${this.fileSrc}`;
+    @Prop() src: string;
+
+    @Event() pageChange: EventEmitter<number>;
+
+    messageEventHandler: any;
+
+    get viewerSrc() {
+        return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${this.src}`;
+    }
+
+    componentDidLoad() {
+        this.initMessageListener();
+    }
+
+    componentDidUnload() {
+        this.window.removeEventListener('message', this.messageEventHandler);
+    }
+
+    initMessageListener() {
+        this.window.addEventListener('message', this.messageEventHandler = (message: MessageEvent) => {
+            switch(message.data.type) {
+                case 'pagechange':
+                    this.pageChange.emit(message.data.value);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     render() {
-        return <iframe src={this.src}></iframe>;
+        return <iframe src={this.viewerSrc}></iframe>;
     }
 
     // @Element() element: HTMLElement;
