@@ -21,6 +21,7 @@ export class PdfViewer {
     @Prop({ context: 'window' }) window: Window;
 
     @Prop() src: string;
+    @Prop() page: number;
 
     @Event() pageChange: EventEmitter<number>;
 
@@ -29,6 +30,9 @@ export class PdfViewer {
     messageEventHandler: any;
 
     get viewerSrc() {
+        if (this.page) {
+            return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${this.src}#page=${this.page}`;
+        }
         return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${this.src}`;
     }
 

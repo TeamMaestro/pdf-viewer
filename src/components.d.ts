@@ -13,10 +13,12 @@ import '@stencil/core';
 export namespace Components {
 
   interface HivePdfViewer {
+    'page': number;
     'src': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
     'onPageChange'?: (event: CustomEvent<number>) => void;
+    'page'?: number;
     'src'?: string;
   }
 }
