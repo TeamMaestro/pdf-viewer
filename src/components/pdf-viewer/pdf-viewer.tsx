@@ -1,7 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch, State } from '@stencil/core';
-import { Config } from './viewer-configuration';
-import { setViewerOptions } from './viewer-options';
-import { Icons } from './icons';
+import { Component, Prop, Element, Event, EventEmitter } from '@stencil/core';
 
 interface MessageEvent {
     data: {
@@ -18,12 +15,16 @@ interface MessageEvent {
 })
 export class PdfViewer {
 
+    @Element() element: HTMLElement;
+
     @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
     @Prop({ context: 'window' }) window: Window;
 
     @Prop() src: string;
 
     @Event() pageChange: EventEmitter<number>;
+
+    iframeEl: HTMLIFrameElement;
 
     messageEventHandler: any;
 
@@ -52,7 +53,7 @@ export class PdfViewer {
     }
 
     render() {
-        return <iframe src={this.viewerSrc}></iframe>;
+        return <iframe ref={(el) => this.iframeEl = el as HTMLIFrameElement} src={this.viewerSrc}></iframe>;
     }
 
     // @Element() element: HTMLElement;
