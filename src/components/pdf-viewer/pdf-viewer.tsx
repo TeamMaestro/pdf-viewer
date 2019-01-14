@@ -1,4 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/core';
 
 interface MessageEvent {
     data: {
@@ -23,6 +23,36 @@ export class PdfViewer {
     @Prop() src: string;
     @Prop() page: number;
 
+    @Prop() enableSideDrawer = true;
+    sidebarToggleEl: HTMLElement;
+
+    @Watch('enableSideDrawer')
+    updateSideDrawerVisibility() {
+        if (this.sidebarToggleEl) {
+            if (this.enableSideDrawer) {
+                this.sidebarToggleEl.classList.remove('hidden');
+            }
+            else {
+                this.sidebarToggleEl.classList.add('hidden');
+            }
+        }
+    }
+
+    @Prop() enableSearch = true;
+    searchToggleEl: HTMLElement;
+
+    @Watch('enableSearch')
+    updateSearchVisibility() {
+        if (this.searchToggleEl) {
+            if (this.enableSearch) {
+                this.searchToggleEl.classList.remove('hidden');
+            }
+            else {
+                this.searchToggleEl.classList.add('hidden');
+            }
+        }
+    }
+
     @Event() pageChange: EventEmitter<number>;
 
     iframeEl: HTMLIFrameElement;
@@ -37,11 +67,21 @@ export class PdfViewer {
     }
 
     componentDidLoad() {
+        this.initButtonVisibility();
         this.initMessageListener();
     }
 
     componentDidUnload() {
         this.window.removeEventListener('message', this.messageEventHandler);
+    }
+
+    initButtonVisibility() {
+        this.iframeEl.onload = () => {
+            this.sidebarToggleEl = this.iframeEl.contentDocument.body.querySelector('#sidebarToggle');
+            this.searchToggleEl = this.iframeEl.contentDocument.body.querySelector('#viewFind');
+            this.updateSideDrawerVisibility();
+            this.updateSearchVisibility();
+        };
     }
 
     initMessageListener() {
