@@ -16,7 +16,7 @@ export namespace Components {
     'enableSearch': boolean;
     'enableSideDrawer': boolean;
     'page': number;
-    'src': string | Uint8Array;
+    'src': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
     'enableSearch'?: boolean;
@@ -24,7 +24,7 @@ export namespace Components {
     'onOnLinkClick'?: (event: CustomEvent<string>) => void;
     'onPageChange'?: (event: CustomEvent<number>) => void;
     'page'?: number;
-    'src'?: string | Uint8Array;
+    'src'?: string;
   }
 }
 

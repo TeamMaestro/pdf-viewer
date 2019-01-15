@@ -17,24 +17,19 @@
         "dist/"
     ],
     "scripts": {
-        "prepare": "npm run pdf.js:build && npm run prepare-assets",
         "build": "npm run pdf.js:build && npm run prepare-assets && npm run build:stencil",
-        "build:stencil": "stencil build && node ./scripts/asset-import.js",
+        "build:stencil": "stencil build",
         "start": "stencil build --dev --watch --serve",
         "prepare-assets": "node ./scripts/prepare-assets.js",
         "pdf.js:install": "cd pdf.js && npm install",
-        "pdf.js:build": "npm run pdf.js:install && npm run pdf.js:dist && npm run pdf.js:pack",
-        "pdf.js:dist": "cd pdf.js && gulp dist-pre",
-        "pdf.js:pack": "node ./scripts/package-cleanup.js && cd pdf.js/build/dist && npm pack && cd ../../../ && node ./scripts/package-rename.js && npm i pdf.js/build/dist/pdfjs-dist.tgz --no-save",
+        "pdf.js:build": "cd pdf.js && gulp generic",
         "prepublishOnly": "npm run build:stencil"
     },
     "dependencies": {},
     "devDependencies": {
         "@stencil/core": "0.16.1",
         "@stencil/sass": "0.1.1",
-        "rollup-plugin-node-builtins": "^2.1.2",
-        "rollup-plugin-node-globals": "^1.4.0",
-        "webpack": "^4.27.1"
+        "ncp": "^2.0.0"
     },
     "license": "MIT"
 }

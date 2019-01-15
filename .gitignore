@@ -1,6 +1,8 @@
 dist/
 www/
 
+src/components/pdf-viewer/pdf-viewer-assets/viewer
+
 *~
 *.sw[mnpcod]
 *.log
