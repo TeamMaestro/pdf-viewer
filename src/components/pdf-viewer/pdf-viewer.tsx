@@ -8,6 +8,11 @@ import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/c
 })
 export class PdfViewer {
 
+    static CSSVariables = [
+        '--pdf-viewer-top-offset',
+        '--pdf-viewer-bottom-offset'
+    ];
+
     @Element() element: HTMLElement;
 
     @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
@@ -61,8 +66,16 @@ export class PdfViewer {
 
     componentDidLoad() {
         this.iframeEl.onload = () => {
+            this.setCSSVariables();
             this.initButtonVisibility();
             this.addEventListeners();
+        }
+    }
+
+    setCSSVariables() {
+        for (let i = 0; i < PdfViewer.CSSVariables.length; i++) {
+            const value = getComputedStyle(this.element).getPropertyValue(PdfViewer.CSSVariables[i]);
+            this.iframeEl.contentDocument.documentElement.style.setProperty(PdfViewer.CSSVariables[i], value);
         }
     }
 
