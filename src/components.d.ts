@@ -21,6 +21,7 @@ export namespace Components {
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
     'enableSearch'?: boolean;
     'enableSideDrawer'?: boolean;
+    'onOnLinkClick'?: (event: CustomEvent<string>) => void;
     'onPageChange'?: (event: CustomEvent<number>) => void;
     'page'?: number;
     'src'?: string;

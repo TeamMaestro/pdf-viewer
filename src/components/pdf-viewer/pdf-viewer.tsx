@@ -1,12 +1,5 @@
 import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/core';
 
-interface MessageEvent {
-    data: {
-        type: string;
-        value: any;
-    }
-}
-
 @Component({
     tag: 'hive-pdf-viewer',
     styleUrl: 'pdf-viewer.scss',
@@ -54,10 +47,10 @@ export class PdfViewer {
     }
 
     @Event() pageChange: EventEmitter<number>;
+    @Event() onLinkClick: EventEmitter<string>;
 
     iframeEl: HTMLIFrameElement;
-
-    messageEventHandler: any;
+    viewerContainer: HTMLElement;
 
     get viewerSrc() {
         if (this.page) {
@@ -67,33 +60,40 @@ export class PdfViewer {
     }
 
     componentDidLoad() {
-        this.initButtonVisibility();
-        this.initMessageListener();
-    }
-
-    componentDidUnload() {
-        this.window.removeEventListener('message', this.messageEventHandler);
+        this.iframeEl.onload = () => {
+            this.initButtonVisibility();
+            this.addEventListeners();
+        }
     }
 
     initButtonVisibility() {
-        this.iframeEl.onload = () => {
-            this.sidebarToggleEl = this.iframeEl.contentDocument.body.querySelector('#sidebarToggle');
-            this.searchToggleEl = this.iframeEl.contentDocument.body.querySelector('#viewFind');
-            this.updateSideDrawerVisibility();
-            this.updateSearchVisibility();
-        };
+        this.sidebarToggleEl = this.iframeEl.contentDocument.body.querySelector('#sidebarToggle');
+        this.searchToggleEl = this.iframeEl.contentDocument.body.querySelector('#viewFind');
+        this.updateSideDrawerVisibility();
+        this.updateSearchVisibility();
     }
 
-    initMessageListener() {
-        this.window.addEventListener('message', this.messageEventHandler = (message: MessageEvent) => {
-            switch(message.data.type) {
-                case 'pagechange':
-                    this.pageChange.emit(message.data.value);
-                    break;
-                default:
-                    break;
+    addEventListeners() {
+        this.viewerContainer = this.iframeEl.contentDocument.body.querySelector('#viewerContainer')
+        this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
+        this.viewerContainer.addEventListener('click', this.handleLinkClick.bind(this));
+    }
+
+    handlePageChange(e: any) {
+        this.pageChange.emit(e.pageNumber);
+    }
+
+    handleLinkClick(e: any) {
+        e.preventDefault();
+        const link = (e.target as any).closest('.linkAnnotation > a');
+        if (link) {
+            const href = (e.target as any).closest('.linkAnnotation > a').href || '';
+            // Ignore internal links to the same document
+            if (href.indexOf(`${window.location.host}/#`) !== -1) {
+                return;
             }
-        });
+            this.onLinkClick.emit(href);
+        }
     }
 
     render() {
