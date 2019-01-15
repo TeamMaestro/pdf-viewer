@@ -89,7 +89,7 @@ export class PdfViewer {
         if (link) {
             const href = (e.target as any).closest('.linkAnnotation > a').href || '';
             // Ignore internal links to the same document
-            if (href.indexOf(`${window.location.host}/#`) !== -1) {
+            if (href.indexOf(`${window.location.host}`) !== -1) {
                 return;
             }
             this.onLinkClick.emit(href);
