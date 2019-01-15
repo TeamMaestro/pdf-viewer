@@ -17,9 +17,8 @@
         "dist/"
     ],
     "scripts": {
-        "prepare": "npm run pdf.js:build && npm run prepare-assets",
         "build": "npm run pdf.js:build && npm run prepare-assets && npm run build:stencil",
-        "build:stencil": "stencil build && node ./scripts/asset-import.js",
+        "build:stencil": "stencil build",
         "start": "stencil build --dev --watch --serve",
         "prepare-assets": "node ./scripts/prepare-assets.js",
         "pdf.js:install": "cd pdf.js && npm install",
@@ -28,7 +27,7 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@stencil/core": "0.16.2",
+        "@stencil/core": "0.16.1",
         "@stencil/sass": "0.1.1",
         "ncp": "^2.0.0"
     },
