@@ -24,6 +24,24 @@ import { defineCustomElements } from '@teamhive/pdf-viewer/dist/loader';
 defineCustomElements(window);
 ```
 
+### Angular
+
+Add viewer assets to `angular.json` assets block:
+```
+{
+    "projects": {
+        "app": {
+            "architect": {
+                "build": {
+                    "options": {
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@teamhive/pdf-viewer/dist/pdf-viewer/pdf-viewer-assets",
+                                "output": "pdf-viewer-assets"
+                            }
+```
+
 Follow the [Stencil JS Framework Integration](https://stenciljs.com/docs/overview) guide for more info.
 
 ## Properties
