@@ -29,7 +29,7 @@ Follow the [Stencil JS Framework Integration](https://stenciljs.com/docs/overvie
 ## Properties
 |Property|Default|Description
 :---:|:---:|:---:
-|`src`||The PDF web address location (file://, http, https)|
+|`src`||The PDF web address location (http, https)|
 |`page`|`1`|The default page index.|
 |`enableSideDrawer`|`true`|If the side drawer UI (and button) is available for display.|
 |`enableSearch`|`true`|If the document can be searched through. Hides the button when false.|
