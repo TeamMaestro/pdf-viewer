@@ -16,6 +16,7 @@ export namespace Components {
     'enableSearch': boolean;
     'enableSideDrawer': boolean;
     'page': number;
+    'print': () => Promise<void>;
     'src': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {

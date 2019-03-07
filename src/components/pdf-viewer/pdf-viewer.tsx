@@ -1,4 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch, Method } from '@stencil/core';
 
 @Component({
     tag: 'hive-pdf-viewer',
@@ -53,6 +53,16 @@ export class PdfViewer {
 
     @Event() pageChange: EventEmitter<number>;
     @Event() onLinkClick: EventEmitter<string>;
+
+    @Method()
+    print() {
+        return new Promise<void>((resolve) => {
+            this.iframeEl.contentWindow.print();
+            this.iframeEl.contentWindow.addEventListener('afterprint', () => {
+                resolve();
+            }, {once: true})
+        })
+    }
 
     iframeEl: HTMLIFrameElement;
     viewerContainer: HTMLElement;
