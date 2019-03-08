@@ -17,13 +17,14 @@
         "dist/"
     ],
     "scripts": {
+        "postinstall": "git submodule update --init && npm run pdf.js:install && npm run build",
         "build": "npm run pdf.js:build && npm run prepare-assets && npm run build:stencil",
         "build:stencil": "stencil build",
         "start": "stencil build --dev --watch --serve",
         "prepare-assets": "node ./scripts/prepare-assets.js",
         "pdf.js:install": "cd pdf.js && npm install",
         "pdf.js:build": "cd pdf.js && gulp generic",
-        "prepublishOnly": "npm run build:stencil"
+        "prepublishOnly": "npm run build"
     },
     "dependencies": {},
     "devDependencies": {
