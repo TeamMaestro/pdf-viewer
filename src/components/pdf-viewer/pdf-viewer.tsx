@@ -64,10 +64,19 @@ export class PdfViewer {
         })
     }
 
+    @Prop() scale: 'auto' | 'page-fit' | 'page-width' | number;
+
+    @Watch('scale')
+    updateScale() {
+        this.setScale(this.scale);
+    }
+
     @Method()
-    setScale(scale: 'auto' | 'page-fit' | 'page-width') {
-        const { pdfViewer } = (this.iframeEl.contentWindow as any).PDFViewerApplication;
-        if (pdfViewer) {
+    setScale(scale: 'auto' | 'page-fit' | 'page-width' | number) {
+        const contentWindow = (this.iframeEl.contentWindow as any);
+
+        if (contentWindow && contentWindow.PDFViewerApplication) {
+            const { pdfViewer } = (this.iframeEl.contentWindow as any).PDFViewerApplication;
             pdfViewer.currentScaleValue = scale;
         }
     }
@@ -108,6 +117,13 @@ export class PdfViewer {
         this.viewerContainer = this.iframeEl.contentDocument.body.querySelector('#viewerContainer')
         this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
         this.viewerContainer.addEventListener('click', this.handleLinkClick.bind(this));
+
+        // when the documents within the pdf viewer finish loading
+        this.iframeEl.contentDocument.addEventListener('pagesloaded', () => {
+            if (this.scale) {
+                this.setScale(this.scale);
+            }
+        });
     }
 
     handlePageChange(e: any) {
