@@ -60,8 +60,16 @@ export class PdfViewer {
             this.iframeEl.contentWindow.print();
             this.iframeEl.contentWindow.addEventListener('afterprint', () => {
                 resolve();
-            }, {once: true})
+            }, { once: true })
         })
+    }
+
+    @Method()
+    setScale(scale: 'auto' | 'page-fit' | 'page-width') {
+        const { pdfViewer } = (this.iframeEl.contentWindow as any).PDFViewerApplication;
+        if (pdfViewer) {
+            pdfViewer.currentScaleValue = scale;
+        }
     }
 
     iframeEl: HTMLIFrameElement;

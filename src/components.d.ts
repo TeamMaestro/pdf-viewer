@@ -17,6 +17,7 @@ export namespace Components {
     'enableSideDrawer': boolean;
     'page': number;
     'print': () => Promise<void>;
+    'setScale': (scale: "auto" | "page-fit" | "page-width") => void;
     'src': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
