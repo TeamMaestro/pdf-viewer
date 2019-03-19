@@ -134,11 +134,11 @@ export class PdfViewer {
         e.preventDefault();
         const link = (e.target as any).closest('.linkAnnotation > a');
         if (link) {
-            const href = (e.target as any).closest('.linkAnnotation > a').href || '';
             // Ignore internal links to the same document
-            if (href.indexOf(`${window.location.host}`) !== -1) {
+            if (link.classList.contains('internalLink')) {
                 return;
             }
+            const href = (e.target as any).closest('.linkAnnotation > a').href || '';
             this.onLinkClick.emit(href);
         }
     }
