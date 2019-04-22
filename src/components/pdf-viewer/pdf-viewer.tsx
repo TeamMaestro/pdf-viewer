@@ -1,4 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch, Method } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch, Method, State } from '@stencil/core';
 
 @Component({
     tag: 'hive-pdf-viewer',
@@ -20,6 +20,22 @@ export class PdfViewer {
 
     @Prop() src: string;
     @Prop() page: number;
+
+    @Prop() enableToolbar = true;
+    toolbarEl: HTMLElement;
+
+    @Watch('enableToolbar')
+    updateToolbarVisibility() {
+        if (this.toolbarEl) {
+            if (this.enableToolbar) {
+                this.toolbarEl.classList.remove('hidden');
+            }
+            else {
+                this.toolbarEl.classList.add('hidden');
+                this.iframeEl.contentDocument.documentElement.style.setProperty('--toolbar-height', '0px');
+            }
+        }
+    }
 
     @Prop() enableSideDrawer = true;
     sidebarToggleEl: HTMLElement;
@@ -84,6 +100,8 @@ export class PdfViewer {
     iframeEl: HTMLIFrameElement;
     viewerContainer: HTMLElement;
 
+    @State() iframeLoaded: boolean;
+
     get viewerSrc() {
         if (this.page) {
             return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(this.src)}#page=${this.page}`;
@@ -96,6 +114,7 @@ export class PdfViewer {
             this.setCSSVariables();
             this.initButtonVisibility();
             this.addEventListeners();
+            this.iframeLoaded = true;
         }
     }
 
@@ -107,8 +126,10 @@ export class PdfViewer {
     }
 
     initButtonVisibility() {
+        this.toolbarEl = this.iframeEl.contentDocument.body.querySelector('#toolbarContainer');
         this.sidebarToggleEl = this.iframeEl.contentDocument.body.querySelector('#sidebarToggle');
         this.searchToggleEl = this.iframeEl.contentDocument.body.querySelector('#viewFind');
+        this.updateToolbarVisibility();
         this.updateSideDrawerVisibility();
         this.updateSearchVisibility();
     }
@@ -144,7 +165,7 @@ export class PdfViewer {
     }
 
     render() {
-        return <iframe ref={(el) => this.iframeEl = el as HTMLIFrameElement} src={this.viewerSrc}></iframe>;
+        return <iframe class={this.iframeLoaded ? 'loaded' : ''} ref={(el) => this.iframeEl = el as HTMLIFrameElement} src={this.viewerSrc}></iframe>;
     }
 
 }

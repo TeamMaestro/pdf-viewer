@@ -15,6 +15,7 @@ export namespace Components {
   interface HivePdfViewer {
     'enableSearch': boolean;
     'enableSideDrawer': boolean;
+    'enableToolbar': boolean;
     'page': number;
     'print': () => Promise<void>;
     'scale': 'auto' | 'page-fit' | 'page-width' | number;
@@ -24,6 +25,7 @@ export namespace Components {
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
     'enableSearch'?: boolean;
     'enableSideDrawer'?: boolean;
+    'enableToolbar'?: boolean;
     'onOnLinkClick'?: (event: CustomEvent<string>) => void;
     'onPageChange'?: (event: CustomEvent<number>) => void;
     'page'?: number;
