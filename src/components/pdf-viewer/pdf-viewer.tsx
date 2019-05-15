@@ -37,6 +37,22 @@ export class PdfViewer {
         }
     }
 
+    @Prop() disableScrolling = false;
+
+    @Watch('disableScrolling')
+    updateScrolling() {
+        if (this.viewerContainer) {
+            if (this.disableScrolling) {
+                this.viewerContainer.style.pointerEvents = 'none';
+                this.viewerContainer.style['WebkitOverflowScrolling'] = 'auto';
+            }
+            else {
+                this.viewerContainer.style.pointerEvents = '';
+                this.viewerContainer.style['WebkitOverflowScrolling'] = '';
+            }
+        }
+    }
+
     @Prop() enableSideDrawer = true;
     sidebarToggleEl: HTMLElement;
 
@@ -138,6 +154,8 @@ export class PdfViewer {
         this.viewerContainer = this.iframeEl.contentDocument.body.querySelector('#viewerContainer')
         this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
         this.viewerContainer.addEventListener('click', this.handleLinkClick.bind(this));
+
+        this.updateScrolling();
 
         // when the documents within the pdf viewer finish loading
         this.iframeEl.contentDocument.addEventListener('pagesloaded', () => {

@@ -13,6 +13,7 @@ import '@stencil/core';
 export namespace Components {
 
   interface HivePdfViewer {
+    'disableScrolling': boolean;
     'enableSearch': boolean;
     'enableSideDrawer': boolean;
     'enableToolbar': boolean;
@@ -23,6 +24,7 @@ export namespace Components {
     'src': string;
   }
   interface HivePdfViewerAttributes extends StencilHTMLAttributes {
+    'disableScrolling'?: boolean;
     'enableSearch'?: boolean;
     'enableSideDrawer'?: boolean;
     'enableToolbar'?: boolean;
