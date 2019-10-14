@@ -1,4 +1,4 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch, Method, State } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch, Method, State, h } from '@stencil/core';
 
 @Component({
     tag: 'hive-pdf-viewer',
@@ -104,7 +104,7 @@ export class PdfViewer {
     }
 
     @Method()
-    setScale(scale: 'auto' | 'page-fit' | 'page-width' | number) {
+    async setScale(scale: 'auto' | 'page-fit' | 'page-width' | number) {
         const contentWindow = (this.iframeEl.contentWindow as any);
 
         if (contentWindow && contentWindow.PDFViewerApplication) {
@@ -183,7 +183,13 @@ export class PdfViewer {
     }
 
     render() {
-        return <iframe class={this.iframeLoaded ? 'loaded' : ''} ref={(el) => this.iframeEl = el as HTMLIFrameElement} src={this.viewerSrc}></iframe>;
+        return (
+            <iframe class={{
+                loaded: this.iframeLoaded
+            }}
+                ref={(el) => this.iframeEl = el as HTMLIFrameElement}
+                src={this.viewerSrc}></iframe>
+        );
     }
 
 }
