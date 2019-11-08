@@ -1,6 +1,6 @@
 {
     "name": "@teamhive/pdf-viewer",
-    "version": "2.4.1",
+    "version": "3.0.0",
     "description": "PDF Viewer Web Component. Built with stencil and pdfjs.",
     "homepage": "https://github.com/TeamHive/pdf-viewer",
     "repository": {
@@ -8,7 +8,7 @@
         "url": "github:TeamHive/pdf-viewer"
     },
     "author": "TeamHive",
-    "module": "dist/esm/index.mjs",
+    "module": "dist/index.mjs",
     "main": "dist/index.js",
     "unpkg": "dist/pdf-viewer.js",
     "types": "dist/types/components.d.ts",
