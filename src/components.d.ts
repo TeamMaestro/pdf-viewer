@@ -5,13 +5,10 @@
  */
 
 
-import '@stencil/core';
-
-
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-
   interface HivePdfViewer {
     'disableScrolling': boolean;
     'enableSearch': boolean;
@@ -20,10 +17,26 @@ export namespace Components {
     'page': number;
     'print': () => Promise<void>;
     'scale': 'auto' | 'page-fit' | 'page-width' | number;
-    'setScale': (scale: number | "auto" | "page-fit" | "page-width") => void;
+    'setScale': (scale: number | "auto" | "page-fit" | "page-width") => Promise<void>;
     'src': string;
   }
-  interface HivePdfViewerAttributes extends StencilHTMLAttributes {
+}
+
+declare global {
+
+
+  interface HTMLHivePdfViewerElement extends Components.HivePdfViewer, HTMLStencilElement {}
+  var HTMLHivePdfViewerElement: {
+    prototype: HTMLHivePdfViewerElement;
+    new (): HTMLHivePdfViewerElement;
+  };
+  interface HTMLElementTagNameMap {
+    'hive-pdf-viewer': HTMLHivePdfViewerElement;
+  }
+}
+
+declare namespace LocalJSX {
+  interface HivePdfViewer {
     'disableScrolling'?: boolean;
     'enableSearch'?: boolean;
     'enableSideDrawer'?: boolean;
@@ -34,39 +47,21 @@ export namespace Components {
     'scale'?: 'auto' | 'page-fit' | 'page-width' | number;
     'src'?: string;
   }
+
+  interface IntrinsicElements {
+    'hive-pdf-viewer': HivePdfViewer;
+  }
 }
 
-declare global {
-  interface StencilElementInterfaces {
-    'HivePdfViewer': Components.HivePdfViewer;
-  }
-
-  interface StencilIntrinsicElements {
-    'hive-pdf-viewer': Components.HivePdfViewerAttributes;
-  }
+export { LocalJSX as JSX };
 
 
-  interface HTMLHivePdfViewerElement extends Components.HivePdfViewer, HTMLStencilElement {}
-  var HTMLHivePdfViewerElement: {
-    prototype: HTMLHivePdfViewerElement;
-    new (): HTMLHivePdfViewerElement;
-  };
-
-  interface HTMLElementTagNameMap {
-    'hive-pdf-viewer': HTMLHivePdfViewerElement
-  }
-
-  interface ElementTagNameMap {
-    'hive-pdf-viewer': HTMLHivePdfViewerElement;
-  }
-
-
+declare module "@stencil/core" {
   export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
+    interface IntrinsicElements {
+      'hive-pdf-viewer': LocalJSX.HivePdfViewer & JSXBase.HTMLAttributes<HTMLHivePdfViewerElement>;
     }
   }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+
