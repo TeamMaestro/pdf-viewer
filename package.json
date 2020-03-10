@@ -27,8 +27,8 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@stencil/core": "^1.7.0",
-        "@stencil/sass": "^1.0.1",
+        "@stencil/core": "^1.8.11",
+        "@stencil/sass": "^1.1.1",
         "ncp": "^2.0.0"
     },
     "license": "MIT"

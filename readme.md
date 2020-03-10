@@ -56,7 +56,7 @@ Follow the [Stencil JS Framework Integration](https://stenciljs.com/docs/overvie
 ### Events
 |Event|Description|
 :---:|:---:
-|`onLinkClick(href: string)`|Emits the `href` clicked when it's not an internal document annotation.|
+|`linkClick(href: string)`|Emits the `href` clicked when it's not an internal document annotation.|
 |`pageChange(currentPage: number)`|Emits the current page number when the current page changes.|
 
 ---

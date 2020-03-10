@@ -10,7 +10,15 @@ export class PdfViewer {
 
     static CSSVariables = [
         '--pdf-viewer-top-offset',
-        '--pdf-viewer-bottom-offset'
+        '--pdf-viewer-bottom-offset',
+        '--background-color',
+        '--toolbar-background-color',
+        '--border-color',
+        '--icon-color',
+        '--accent-color',
+        '--page-border-radius',
+        '--page-box-shadow',
+        '--page-margin'
     ];
 
     @Element() element: HTMLElement;
@@ -84,7 +92,7 @@ export class PdfViewer {
     }
 
     @Event() pageChange: EventEmitter<number>;
-    @Event() onLinkClick: EventEmitter<string>;
+    @Event() linkClick: EventEmitter<string>;
 
     @Method()
     print() {
@@ -178,7 +186,7 @@ export class PdfViewer {
                 return;
             }
             const href = (e.target as any).closest('.linkAnnotation > a').href || '';
-            this.onLinkClick.emit(href);
+            this.linkClick.emit(href);
         }
     }
 
