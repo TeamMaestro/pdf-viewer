@@ -159,8 +159,9 @@ export class PdfViewer {
     }
 
     addEventListeners() {
-        this.viewerContainer = this.iframeEl.contentDocument.body.querySelector('#viewerContainer')
-        this.viewerContainer.addEventListener('pagechange', this.handlePageChange.bind(this));
+        this.viewerContainer = this.iframeEl.contentDocument.body.querySelector('#viewerContainer');
+
+        this.iframeEl.contentDocument.addEventListener('pagechanging', this.handlePageChange.bind(this));
         this.viewerContainer.addEventListener('click', this.handleLinkClick.bind(this));
 
         this.updateScrolling();
