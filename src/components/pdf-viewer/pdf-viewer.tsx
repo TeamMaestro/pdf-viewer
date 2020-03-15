@@ -175,7 +175,7 @@ export class PdfViewer {
     }
 
     handlePageChange(e: any) {
-        this.pageChange.emit(e.pageNumber);
+        this.pageChange.emit(e.detail.pageNumber);
     }
 
     handleLinkClick(e: any) {
