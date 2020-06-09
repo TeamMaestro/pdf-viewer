@@ -18,7 +18,8 @@ export class PdfViewer {
         '--accent-color',
         '--page-border-radius',
         '--page-box-shadow',
-        '--page-margin'
+        '--page-margin',
+        '--floating-buttons-offset'
     ];
 
     @Element() element: HTMLElement;
