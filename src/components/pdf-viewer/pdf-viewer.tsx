@@ -38,6 +38,7 @@ export class PdfViewer {
         if (this.toolbarEl) {
             if (this.enableToolbar) {
                 this.toolbarEl.classList.remove('hidden');
+                this.iframeEl.contentDocument.documentElement.style.setProperty('--toolbar-height', '');
             }
             else {
                 this.toolbarEl.classList.add('hidden');
