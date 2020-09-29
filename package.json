@@ -29,6 +29,7 @@
     "devDependencies": {
         "@stencil/core": "^1.8.11",
         "@stencil/sass": "^1.1.1",
+        "gulp": "^4.0.2",
         "ncp": "^2.0.0"
     },
     "license": "MIT"
