@@ -1,10 +1,10 @@
-import { Component, Prop, Element, Event, EventEmitter, Watch, Method, State, h } from '@stencil/core';
+import { Component, Prop, Element, Event, EventEmitter, Watch, Method, State, h, getAssetPath } from '@stencil/core';
 
 @Component({
     tag: 'hive-pdf-viewer',
     styleUrl: 'pdf-viewer.scss',
     shadow: true,
-    assetsDir: 'pdf-viewer-assets'
+    assetsDirs: ['pdf-viewer-assets']
 })
 export class PdfViewer {
 
@@ -23,9 +23,6 @@ export class PdfViewer {
     ];
 
     @Element() element: HTMLElement;
-
-    @Prop({ context: 'resourcesUrl' }) resourcesUrl: string;
-    @Prop({ context: 'window' }) window: Window;
 
     @Prop() src: string;
     @Prop() page: number;
@@ -130,9 +127,9 @@ export class PdfViewer {
 
     get viewerSrc() {
         if (this.page) {
-            return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(this.src)}#page=${this.page}`;
+            return getAssetPath(`./pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(this.src)}#page=${this.page}`)
         }
-        return `${this.resourcesUrl}pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(this.src)}`;
+        return getAssetPath(`./pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(this.src)}`);
     }
 
     componentDidLoad() {
