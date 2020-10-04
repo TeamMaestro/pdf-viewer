@@ -217,39 +217,39 @@ export class PdfViewer {
             }
         });
 
-        // const fullscreenBtn = this.iframeEl.contentDocument.documentElement.querySelector(
-        //     "#fullscreen"
-        // );
+        const fullscreenBtn = this.iframeEl.contentDocument.documentElement.querySelector(
+            "#fullscreen"
+        );
 
-        // if (screenfull.isEnabled) {
-        //     screenfull.on("change", () => {
-        //         if (screenfull.isEnabled) {
-        //             const collapseIcon = fullscreenBtn.querySelector(
-        //                 "#collapseIcon"
-        //             ) as HTMLElement;
-        //             const fullscreenIcon = fullscreenBtn.querySelector(
-        //                 "#fullscreenIcon"
-        //             ) as HTMLElement;
-        //             if (screenfull.isFullscreen) {
-        //                 collapseIcon.classList.remove("hidden");
-        //                 fullscreenIcon.classList.add("hidden");
-        //             } else {
-        //                 fullscreenIcon.classList.remove("hidden");
-        //                 collapseIcon.classList.add("hidden");
-        //             }
-        //         }
-        //     });
-        // } else {
-        //     fullscreenBtn.classList.add("hidden");
-        // }
+        if (screenfull.isEnabled) {
+            screenfull.on("change", () => {
+                if (screenfull.isEnabled) {
+                    const collapseIcon = fullscreenBtn.querySelector(
+                        "#collapseIcon"
+                    ) as HTMLElement;
+                    const fullscreenIcon = fullscreenBtn.querySelector(
+                        "#fullscreenIcon"
+                    ) as HTMLElement;
+                    if (screenfull.isFullscreen) {
+                        collapseIcon.classList.remove("hidden");
+                        fullscreenIcon.classList.add("hidden");
+                    } else {
+                        fullscreenIcon.classList.remove("hidden");
+                        collapseIcon.classList.add("hidden");
+                    }
+                }
+            });
+        } else {
+            fullscreenBtn.classList.add("hidden");
+        }
 
-        // fullscreenBtn.addEventListener("click", () => {
-        //     if (screenfull.isEnabled) {
-        //         screenfull.toggle(
-        //             this.iframeEl.contentDocument.documentElement
-        //         );
-        //     }
-        // });
+        fullscreenBtn.addEventListener("click", () => {
+            if (screenfull.isEnabled) {
+                screenfull.toggle(
+                    this.iframeEl.contentDocument.documentElement
+                );
+            }
+        });
     }
 
     handlePageChange(e: any) {
