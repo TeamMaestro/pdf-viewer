@@ -1,6 +1,6 @@
 {
     "name": "@teamhive/pdf-viewer",
-    "version": "4.1.0",
+    "version": "4.1.1",
     "description": "PDF Viewer Web Component. Built with stencil and pdfjs.",
     "homepage": "https://github.com/TeamHive/pdf-viewer",
     "repository": {
@@ -25,7 +25,9 @@
         "pdf.js:build": "cd pdf.js && gulp generic",
         "prepublishOnly": "npm run build"
     },
-    "dependencies": {},
+    "dependencies": {
+        "screenfull": "^5.0.2"
+    },
     "devDependencies": {
         "@stencil/core": "^2.0.3",
         "@stencil/sass": "^1.3.2",

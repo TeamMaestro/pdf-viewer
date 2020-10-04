@@ -13,8 +13,8 @@ export namespace Components {
         "enableToolbar": boolean;
         "page": number;
         "print": () => Promise<void>;
-        "scale": 'auto' | 'page-fit' | 'page-width' | number;
-        "setScale": (scale: 'auto' | 'page-fit' | 'page-width' | number) => Promise<void>;
+        "scale": "auto" | "page-fit" | "page-width" | number;
+        "setScale": (scale: "auto" | "page-fit" | "page-width" | number) => Promise<void>;
         "src": string;
     }
 }
@@ -38,7 +38,7 @@ declare namespace LocalJSX {
         "onLinkClick"?: (event: CustomEvent<string>) => void;
         "onPageChange"?: (event: CustomEvent<number>) => void;
         "page"?: number;
-        "scale"?: 'auto' | 'page-fit' | 'page-width' | number;
+        "scale"?: "auto" | "page-fit" | "page-width" | number;
         "src"?: string;
     }
     interface IntrinsicElements {
