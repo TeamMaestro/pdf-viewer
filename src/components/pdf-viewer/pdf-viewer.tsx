@@ -145,17 +145,9 @@ export class PdfViewer {
 
     get viewerSrc() {
         if (this.page) {
-            return getAssetPath(
-                `./pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(
-                    this.src
-                )}#page=${this.page}`
-            );
+            return `${getAssetPath('./pdf-viewer-assets/viewer/web/viewer.html')}?file=${encodeURIComponent(this.src)}#page=${this.page}`;
         }
-        return getAssetPath(
-            `./pdf-viewer-assets/viewer/web/viewer.html?file=${encodeURIComponent(
-                this.src
-            )}`
-        );
+        return `${getAssetPath('./pdf-viewer-assets/viewer/web/viewer.html')}?file=${encodeURIComponent(this.src)}`;
     }
 
     componentDidLoad() {
