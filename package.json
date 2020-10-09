@@ -8,8 +8,8 @@
         "url": "github:TeamHive/pdf-viewer"
     },
     "author": "TeamHive",
-    "module": "dist/index.mjs",
-    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "main": "dist/index.cjs.js",
     "unpkg": "dist/pdf-viewer.js",
     "types": "dist/types/components.d.ts",
     "collection": "dist/collection/collection-manifest.json",
