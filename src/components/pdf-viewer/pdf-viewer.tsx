@@ -110,7 +110,7 @@ export class PdfViewer {
     print() {
         return new Promise<void>((resolve) => {
             this.iframeEl.contentWindow.print();
-            this.iframeEl.contentWindow.addEventListener(
+            (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on(
                 "afterprint",
                 () => {
                     resolve();
@@ -191,7 +191,7 @@ export class PdfViewer {
             "#viewerContainer"
         );
 
-        this.iframeEl.contentDocument.addEventListener(
+        (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on(
             "pagechanging",
             this.handlePageChange.bind(this)
         );
@@ -203,7 +203,7 @@ export class PdfViewer {
         this.updateScrolling();
 
         // when the documents within the pdf viewer finish loading
-        this.iframeEl.contentDocument.addEventListener("pagesloaded", () => {
+        (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on("pagesloaded", () => {
             if (this.scale) {
                 this.setScale(this.scale);
             }
@@ -245,7 +245,7 @@ export class PdfViewer {
     }
 
     handlePageChange(e: any) {
-        this.pageChange.emit(e.detail.pageNumber);
+        this.pageChange.emit(e.pageNumber);
     }
 
     handleLinkClick(e: any) {
