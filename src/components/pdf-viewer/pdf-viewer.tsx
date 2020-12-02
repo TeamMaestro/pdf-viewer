@@ -110,7 +110,8 @@ export class PdfViewer {
     print() {
         return new Promise<void>((resolve) => {
             this.iframeEl.contentWindow.print();
-            (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on(
+            (this.iframeEl
+                .contentWindow as any).PDFViewerApplication.eventBus.on(
                 "afterprint",
                 () => {
                     resolve();
@@ -145,9 +146,13 @@ export class PdfViewer {
 
     get viewerSrc() {
         if (this.page) {
-            return `${getAssetPath('./pdf-viewer-assets/viewer/web/viewer.html')}?file=${encodeURIComponent(this.src)}#page=${this.page}`;
+            return `${getAssetPath(
+                "./pdf-viewer-assets/viewer/web/viewer.html"
+            )}?file=${encodeURIComponent(this.src)}#page=${this.page}`;
         }
-        return `${getAssetPath('./pdf-viewer-assets/viewer/web/viewer.html')}?file=${encodeURIComponent(this.src)}`;
+        return `${getAssetPath(
+            "./pdf-viewer-assets/viewer/web/viewer.html"
+        )}?file=${encodeURIComponent(this.src)}`;
     }
 
     componentDidLoad() {
@@ -191,23 +196,28 @@ export class PdfViewer {
             "#viewerContainer"
         );
 
-        (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on(
-            "pagechanging",
-            this.handlePageChange.bind(this)
-        );
+        const frameWindow = this.iframeEl.contentWindow as any;
+        const pdfViewer = frameWindow.PDFViewerApplication;
+
+        pdfViewer.initializedPromise.then(() => {
+            pdfViewer.eventBus.on(
+                "pagechanging",
+                this.handlePageChange.bind(this)
+            );
+            // when the documents within the pdf viewer finish loading
+            pdfViewer.eventBus.on("pagesloaded", () => {
+                if (this.scale) {
+                    this.setScale(this.scale);
+                }
+            });
+        });
+
         this.viewerContainer.addEventListener(
             "click",
             this.handleLinkClick.bind(this)
         );
 
         this.updateScrolling();
-
-        // when the documents within the pdf viewer finish loading
-        (this.iframeEl.contentWindow as any).PDFViewerApplication.eventBus.on("pagesloaded", () => {
-            if (this.scale) {
-                this.setScale(this.scale);
-            }
-        });
 
         const fullscreenBtn = this.iframeEl.contentDocument.documentElement.querySelector(
             "#fullscreen"
