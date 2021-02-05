@@ -269,14 +269,13 @@ export class PdfViewer implements ComponentInterface {
 
     handleLinkClick(e: any) {
         e.preventDefault();
-        const link = (e.target as any).closest(".linkAnnotation > a");
+        const link = e.target.tagName === "A" ? e.target : e.target.closest(".linkAnnotation > a");
         if (link) {
             // Ignore internal links to the same document
             if (link.classList.contains("internalLink")) {
                 return;
             }
-            const href =
-                (e.target as any).closest(".linkAnnotation > a").href || "";
+            const href = link.href || "";
             this.linkClick.emit(href);
         }
     }
