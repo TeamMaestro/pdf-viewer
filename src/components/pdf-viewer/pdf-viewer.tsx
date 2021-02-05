@@ -9,6 +9,7 @@ import {
     State,
     h,
     getAssetPath,
+    ComponentInterface,
 } from "@stencil/core";
 import * as screenfull from "screenfull";
 
@@ -18,7 +19,7 @@ import * as screenfull from "screenfull";
     shadow: true,
     assetsDirs: ["pdf-viewer-assets"],
 })
-export class PdfViewer {
+export class PdfViewer implements ComponentInterface {
     static CSSVariables = [
         "--pdf-viewer-top-offset",
         "--pdf-viewer-bottom-offset",
@@ -142,6 +143,8 @@ export class PdfViewer {
     iframeEl: HTMLIFrameElement;
     viewerContainer: HTMLElement;
 
+    PDFViewerApplication: any;
+
     @State() iframeLoaded: boolean;
 
     get viewerSrc() {
@@ -161,7 +164,13 @@ export class PdfViewer {
             this.initButtonVisibility();
             this.addEventListeners();
             this.iframeLoaded = true;
+            this.PDFViewerApplication = (this.iframeEl.contentWindow as any).PDFViewerApplication;
         };
+    }
+
+    disconnectedCallback() {
+        // https://github.com/mozilla/pdf.js/issues/11297
+        this.PDFViewerApplication.pdfViewer._pages.forEach(page => page.reset());
     }
 
     setCSSVariables() {
