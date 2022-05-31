@@ -11,6 +11,7 @@ export namespace Components {
         "enableSearch": boolean;
         "enableSideDrawer": boolean;
         "enableToolbar": boolean;
+        "getPage": () => Promise<any>;
         "page": number;
         "print": () => Promise<void>;
         "scale": "auto" | "page-fit" | "page-width" | number;

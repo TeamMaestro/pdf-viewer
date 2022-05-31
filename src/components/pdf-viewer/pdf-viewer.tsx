@@ -140,6 +140,17 @@ export class PdfViewer implements ComponentInterface {
         }
     }
 
+    @Method()
+    async getPage() {
+        const contentWindow = this.iframeEl.contentWindow as any;
+
+        if (contentWindow && contentWindow.PDFViewerApplication) {
+            const { pdfViewer } = (this.iframeEl
+                .contentWindow as any).PDFViewerApplication;
+            return pdfViewer.currentPageNumber;
+        }
+    }
+
     iframeEl: HTMLIFrameElement;
     viewerContainer: HTMLElement;
 
