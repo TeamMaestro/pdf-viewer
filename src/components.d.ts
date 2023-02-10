@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface HivePdfViewer {
         "disableScrolling": boolean;
+        "enableManualFullscreenFallback": boolean;
         "enableSearch": boolean;
         "enableSideDrawer": boolean;
         "enableToolbar": boolean;
@@ -33,9 +34,11 @@ declare global {
 declare namespace LocalJSX {
     interface HivePdfViewer {
         "disableScrolling"?: boolean;
+        "enableManualFullscreenFallback"?: boolean;
         "enableSearch"?: boolean;
         "enableSideDrawer"?: boolean;
         "enableToolbar"?: boolean;
+        "onFullscreenToggle"?: (event: CustomEvent<boolean>) => void;
         "onLinkClick"?: (event: CustomEvent<string>) => void;
         "onPageChange"?: (event: CustomEvent<number>) => void;
         "page"?: number;

@@ -63,6 +63,8 @@ export class PdfViewer implements ComponentInterface {
 
     @Prop() disableScrolling = false;
 
+    @Prop() enableManualFullscreenFallback = false;
+
     @Watch("disableScrolling")
     updateScrolling() {
         if (this.viewerContainer) {
@@ -106,6 +108,8 @@ export class PdfViewer implements ComponentInterface {
 
     @Event() pageChange: EventEmitter<number>;
     @Event() linkClick: EventEmitter<string>;
+
+    @Event() fullscreenToggle: EventEmitter<boolean>;
 
     @Method()
     print() {
@@ -243,15 +247,17 @@ export class PdfViewer implements ComponentInterface {
             "#fullscreen"
         );
 
+        const collapseIcon = fullscreenBtn.querySelector(
+            "#collapseIcon"
+        ) as HTMLElement;
+
+        const fullscreenIcon = fullscreenBtn.querySelector(
+            "#fullscreenIcon"
+        ) as HTMLElement;
+
         if (screenfull.isEnabled) {
             screenfull.on("change", () => {
                 if (screenfull.isEnabled) {
-                    const collapseIcon = fullscreenBtn.querySelector(
-                        "#collapseIcon"
-                    ) as HTMLElement;
-                    const fullscreenIcon = fullscreenBtn.querySelector(
-                        "#fullscreenIcon"
-                    ) as HTMLElement;
                     if (screenfull.isFullscreen) {
                         collapseIcon.classList.remove("hidden");
                         fullscreenIcon.classList.add("hidden");
@@ -261,17 +267,33 @@ export class PdfViewer implements ComponentInterface {
                     }
                 }
             });
-        } else {
-            fullscreenBtn.classList.add("hidden");
-        }
 
-        fullscreenBtn.addEventListener("click", () => {
-            if (screenfull.isEnabled) {
-                screenfull.toggle(
-                    this.iframeEl.contentDocument.documentElement
-                );
-            }
-        });
+            fullscreenBtn.addEventListener("click", () => {
+                if (screenfull.isEnabled) {
+                    screenfull.toggle(
+                        this.iframeEl.contentDocument.documentElement
+                    );
+                }
+            });
+        } else if (this.enableManualFullscreenFallback) {
+            // enable "fake" fullscreen
+            let isFullscreen = false;
+            fullscreenBtn.classList.remove("hidden");
+
+            fullscreenBtn.addEventListener("click", () => {
+                if (isFullscreen) {
+                    isFullscreen = false;
+                    collapseIcon.classList.add("hidden");
+                    fullscreenIcon.classList.remove("hidden");
+                }
+                else {
+                    isFullscreen = true;
+                    collapseIcon.classList.remove("hidden");
+                    fullscreenIcon.classList.add("hidden");
+                }
+                this.fullscreenToggle.emit(isFullscreen);
+            });
+        }
     }
 
     handlePageChange(e: any) {
