@@ -20,8 +20,25 @@ export namespace Components {
         "src": string;
     }
 }
+export interface HivePdfViewerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHivePdfViewerElement;
+}
 declare global {
+    interface HTMLHivePdfViewerElementEventMap {
+        "pageChange": number;
+        "linkClick": string;
+        "fullscreenToggle": boolean;
+    }
     interface HTMLHivePdfViewerElement extends Components.HivePdfViewer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLHivePdfViewerElementEventMap>(type: K, listener: (this: HTMLHivePdfViewerElement, ev: HivePdfViewerCustomEvent<HTMLHivePdfViewerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLHivePdfViewerElementEventMap>(type: K, listener: (this: HTMLHivePdfViewerElement, ev: HivePdfViewerCustomEvent<HTMLHivePdfViewerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHivePdfViewerElement: {
         prototype: HTMLHivePdfViewerElement;
@@ -38,9 +55,9 @@ declare namespace LocalJSX {
         "enableSearch"?: boolean;
         "enableSideDrawer"?: boolean;
         "enableToolbar"?: boolean;
-        "onFullscreenToggle"?: (event: CustomEvent<boolean>) => void;
-        "onLinkClick"?: (event: CustomEvent<string>) => void;
-        "onPageChange"?: (event: CustomEvent<number>) => void;
+        "onFullscreenToggle"?: (event: HivePdfViewerCustomEvent<boolean>) => void;
+        "onLinkClick"?: (event: HivePdfViewerCustomEvent<string>) => void;
+        "onPageChange"?: (event: HivePdfViewerCustomEvent<number>) => void;
         "page"?: number;
         "scale"?: "auto" | "page-fit" | "page-width" | number;
         "src"?: string;
